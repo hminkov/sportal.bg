@@ -1,0 +1,6 @@
+User:
+login, register, edit, delete
+Article:
+add, edit, delete, like, dislike, sort
+Comment:
+add, edit, delete, like, dislike, reply, get user's own comments
