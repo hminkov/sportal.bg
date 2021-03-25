@@ -56,6 +56,5 @@ public class ImageController {
         File pFile = new File(url);
         //read its bytes and write them into response body
         return Files.readAllBytes(pFile.toPath());
-
     }
 }
