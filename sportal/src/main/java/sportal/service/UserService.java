@@ -12,7 +12,7 @@ import sportal.model.dto.LoginResponseUserDTO;
 import sportal.model.dto.RegisterRequestUserDTO;
 import sportal.model.dto.RegisterResponseUserDTO;
 import sportal.model.pojo.User;
-import sportal.model.repository.UserRepository;
+import sportal.model.repository.IUserRepository;
 
 import java.util.Optional;
 
@@ -20,8 +20,7 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    UserRepository userRepository;
-
+    IUserRepository userRepository;
 
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
         //check if email exists

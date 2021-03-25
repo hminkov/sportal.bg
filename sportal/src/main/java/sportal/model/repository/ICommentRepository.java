@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sportal.model.pojo.Comment;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+public interface ICommentRepository extends JpaRepository<Comment, Integer> {
 }

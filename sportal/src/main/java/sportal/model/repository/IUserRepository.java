@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import sportal.model.pojo.User;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface IUserRepository extends JpaRepository<User, Integer> {
     User findByEmail(String email);
     User findByUsername(String username);
 }

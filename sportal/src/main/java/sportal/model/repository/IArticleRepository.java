@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import sportal.model.pojo.Article;
 
 @Repository
-public interface ArticleRepository extends JpaRepository<Article, Integer> {
+public interface IArticleRepository extends JpaRepository<Article, Integer> {
 }

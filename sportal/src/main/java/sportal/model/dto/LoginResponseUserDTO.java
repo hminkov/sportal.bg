@@ -10,7 +10,6 @@ public class LoginResponseUserDTO {
     private int id;
     private String username;
     private String email;
-    private int age;
 
     public LoginResponseUserDTO(User u){
         id = u.getId();

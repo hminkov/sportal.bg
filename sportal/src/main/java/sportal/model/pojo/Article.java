@@ -30,7 +30,7 @@ public class Article {
     private List<Comment> comments;
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private Category category;
+    private ArticleCategory category;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
