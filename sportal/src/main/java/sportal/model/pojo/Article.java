@@ -24,7 +24,7 @@ public class Article {
     private String heading;
     private String articleText;
     private LocalDateTime postDate;
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "parentArticle")
     private List<Comment> comments;
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -32,4 +32,6 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
+    @OneToMany(mappedBy = "article")
+    private List<ArticleImage> images;
 }
