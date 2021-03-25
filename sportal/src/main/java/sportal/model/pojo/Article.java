@@ -20,13 +20,11 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
-    private int categoryId;
     private int views;
     private String heading;
     private String articleText;
     private LocalDateTime postDate;
-    @OneToMany(mappedBy = "article")
+    @OneToMany(mappedBy = "parentArticle")
     private List<Comment> comments;
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -34,4 +32,6 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
+    @OneToMany(mappedBy = "article")
+    private List<Picture> images;
 }

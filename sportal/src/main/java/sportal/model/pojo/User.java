@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import sportal.model.dto.RegisterRequestUserDTO;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Entity
 @Table(name="users")
+@Component
 public class User {
 
     @Id
@@ -22,7 +24,7 @@ public class User {
     private String username;
     private String password;
     private String email;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "author")
     private List<Article> articles;
 
     public User(RegisterRequestUserDTO userDTO){

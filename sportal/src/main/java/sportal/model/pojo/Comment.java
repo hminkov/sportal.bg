@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "comments")
+@Table(name = "article_comments")
 @Component
 public class Comment {
 
@@ -20,7 +20,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int userId;
-    private int articleId;
     private String commentText;
     private LocalDateTime postDate;
     @ManyToOne

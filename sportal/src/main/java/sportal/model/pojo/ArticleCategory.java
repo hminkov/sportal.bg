@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "categories")
+@Table(name = "article_categories")
 @Component
 public class ArticleCategory {
 
