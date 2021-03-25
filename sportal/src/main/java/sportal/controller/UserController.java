@@ -10,4 +10,9 @@ public class UserController {
     public String hi(){
         return "Privet";
     }
+
+//    @PutMapping("/users/register")
+//    public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO){
+//        return userService.addUser(userDTO);
+//    }
 }

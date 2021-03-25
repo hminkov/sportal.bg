@@ -4,17 +4,15 @@ package sportal.model.pojo;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.List;
 
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Entity
-@Table(name = "users")
-@Component
+@Table(name="users")
 public class User {
 
     @Id
