@@ -1,5 +1,6 @@
 package sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class Comment {
     private int id;
     private String commentText;
     private LocalDateTime postDate;
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;

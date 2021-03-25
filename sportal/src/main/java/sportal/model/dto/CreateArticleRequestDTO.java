@@ -13,6 +13,7 @@ import sportal.model.pojo.User;
 public class CreateArticleRequestDTO {
 
     private int creatorId;
+    private String category;
     private String heading;
     private String text;
 }
