@@ -27,27 +27,11 @@ public class Article {
     private String heading;
     private String articleText;
     private LocalDateTime postDate;
-<<<<<<< HEAD
-//    @OneToMany(mappedBy = "parentArticle")
-//    private List<Comment> comments;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private ArticleCategory category;
-=======
+
     @OneToMany(mappedBy = "parentArticle")
     private List<Comment> comments;
     @JsonManagedReference
->>>>>>> 00462a67683d659bd339ebd0c0c871dbe918f5da
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User author;
-    @OneToMany(mappedBy = "article")
-    private List<ArticleImage> images;
-<<<<<<< HEAD
-=======
-    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ArticleCategory category;
->>>>>>> 00462a67683d659bd339ebd0c0c871dbe918f5da
 }
