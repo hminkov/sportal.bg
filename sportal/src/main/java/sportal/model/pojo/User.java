@@ -1,6 +1,8 @@
 package sportal.model.pojo;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,6 +26,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    @JsonBackReference
     @OneToMany(mappedBy = "author")
     private List<Article> articles;
 

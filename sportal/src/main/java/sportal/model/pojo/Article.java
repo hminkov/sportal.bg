@@ -1,8 +1,11 @@
 package sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -26,12 +29,14 @@ public class Article {
     private LocalDateTime postDate;
     @OneToMany(mappedBy = "parentArticle")
     private List<Comment> comments;
-    @ManyToOne
-    @JoinColumn(name = "category_id")
-    private ArticleCategory category;
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User author;
     @OneToMany(mappedBy = "article")
-    private List<Picture> images;
+    private List<ArticleImage> images;
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private ArticleCategory category;
 }
