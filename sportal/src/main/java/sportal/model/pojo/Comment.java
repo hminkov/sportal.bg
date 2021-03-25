@@ -12,18 +12,16 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Table(name = "comments")
+@Table(name = "article_comments")
 @Component
 public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
-    private int articleId;
     private String commentText;
     private LocalDateTime postDate;
     @ManyToOne
     @JoinColumn(name = "article_id")
-    private Article parentArticle;
+    private Article article;
 }

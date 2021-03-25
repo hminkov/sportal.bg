@@ -20,8 +20,6 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private int userId;
-    private int categoryId;
     private int views;
     private String heading;
     private String articleText;

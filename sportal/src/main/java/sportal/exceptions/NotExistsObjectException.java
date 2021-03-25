@@ -1,4 +1,4 @@
-package sportal.exception;
+package sportal.exceptions;
 
 public class NotExistsObjectException extends RuntimeException {
 
