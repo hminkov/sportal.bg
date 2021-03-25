@@ -24,8 +24,8 @@ public class Article {
     private String heading;
     private String articleText;
     private LocalDateTime postDate;
-    @OneToMany(mappedBy = "parentArticle")
-    private List<Comment> comments;
+//    @OneToMany(mappedBy = "parentArticle")
+//    private List<Comment> comments;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ArticleCategory category;

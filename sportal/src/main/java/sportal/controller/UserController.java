@@ -8,11 +8,15 @@ import sportal.model.dto.RegisterRequestUserDTO;
 import sportal.model.dto.RegisterResponseUserDTO;
 import sportal.service.UserService;
 
+import javax.servlet.http.HttpSession;
+
 @RestController
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private SessionManager sessionManager;
 
     @GetMapping("/hi")
     public String hi(){
@@ -25,8 +29,15 @@ public class UserController {
     }
 
     @PostMapping("/users/login")
-    public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO){
-        return userService.loginUser(userDTO);
+    public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
+        LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
+        sessionManager.loginUser(ses, responseDto.getId());
+        return responseDto;
+    }
+
+    @PostMapping("/users/logout")
+    public void logout(HttpSession ses){
+        sessionManager.logoutUser(ses);
     }
 
 }

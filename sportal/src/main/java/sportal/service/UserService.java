@@ -44,6 +44,8 @@ public class UserService {
         return responseUserDTO;
     }
 
+
+
     public LoginResponseUserDTO getUserById(int id) {
         Optional<User> schrodingerUser = userRepository.findById(id);
         if(schrodingerUser.isPresent()){
@@ -60,7 +62,7 @@ public class UserService {
             throw new AuthenticationException("Wrong credentials");
         }
         else{
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
             if(encoder.matches(dto.getPassword(), user.getPassword())){
                 return new LoginResponseUserDTO(user);
             }

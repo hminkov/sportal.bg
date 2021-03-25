@@ -1,10 +1,10 @@
-package bri4ki.controller;
+package sportal.controller;
 
-import bri4ki.exceptions.AuthenticationException;
-import bri4ki.model.pojo.User;
-import bri4ki.model.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sportal.exceptions.AuthenticationException;
+import sportal.model.pojo.User;
+import sportal.model.repository.IUserRepository;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,7 +14,7 @@ public class SessionManager {
     private static final String LOGGED_USER_ID = "LOGGED_USER_ID";
 
     @Autowired
-    private UserRepository repository;
+    private IUserRepository repository;
 
     public User getLoggedUser(HttpSession session){
         if(session.getAttribute(LOGGED_USER_ID) == null){

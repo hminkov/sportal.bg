@@ -20,6 +20,6 @@ public class ArticleCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String categoryName;
-    @OneToMany(mappedBy = "category")
-    private List<Article> articles;
+//    @OneToMany(mappedBy = "category")
+//    private List<Article> articles;
 }
