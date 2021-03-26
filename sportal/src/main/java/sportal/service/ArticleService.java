@@ -46,11 +46,14 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO getArticle(int id) {
+        Article article = orv.verifyOptionalResult(articleRepository.findById(id));
+        article.setViews(article.getViews()+1);
+        articleRepository.save(article);
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(id)));
     }
 
-    public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle) {
-        Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(editedArticle.getId()));
+    public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
+        Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
         ogArticle.setArticleText(editedArticle.getText());
         String editedCategoryName = editedArticle.getCategory();

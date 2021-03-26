@@ -15,7 +15,7 @@ public class ArticleController {
 
     @PostMapping("/articles/new")
     public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article){
-        //TODO validate admin priviliges
+        //TODO validate admin privileges
         return articleService.postNewArticle(article);
     }
 
@@ -24,15 +24,15 @@ public class ArticleController {
         return articleService.getArticle(id);
     }
 
-    @PutMapping("/articles/{userId}")
-    public ArticleResponseDTO editArticle(@PathVariable int userId, @RequestBody EditArticleRequestDTO article){
-        //TODO validate admin priviliges
-        return articleService.editArticle(article);
+    @PutMapping("/articles/{articleId}")
+    public ArticleResponseDTO editArticle(@PathVariable int articleId, @RequestBody EditArticleRequestDTO article){
+        //TODO validate admin privileges
+        return articleService.editArticle(article, articleId);
     }
 
-    @DeleteMapping("/articles/{userId}/{articleId}")
-    public void deleteArticle(@PathVariable int userId, @PathVariable int articleId){
-        //TODO validate admin priviliges
+    @DeleteMapping("/articles/{articleId}")
+    public void deleteArticle(@PathVariable int articleId){
+        //TODO validate admin privileges
         articleService.deleteArticle(articleId);
     }
 }

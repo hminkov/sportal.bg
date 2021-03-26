@@ -6,7 +6,10 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.ArticleCategory;
+import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
+
+import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -19,6 +22,8 @@ public class ArticleResponseDTO {
     private String heading;
     private String text;
     private ArticleCategory category;
+    private int views;
+    private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){
         id = article.getId();
@@ -26,5 +31,7 @@ public class ArticleResponseDTO {
         heading = article.getHeading();
         text = article.getArticleText();
         category = article.getCategory();
+        views = article.getViews();
+        comments = article.getComments();
     }
 }
