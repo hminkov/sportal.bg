@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
+import sportal.model.dao.ArticleDAO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
@@ -22,13 +23,15 @@ import java.time.LocalDateTime;
 public class ArticleService {
 
     @Autowired
-    IArticleRepository articleRepository;
+    private IArticleRepository articleRepository;
     @Autowired
-    IUserRepository userRepository;
+    private IUserRepository userRepository;
     @Autowired
-    ICategoryRepository categoryRepository;
+    private ICategoryRepository categoryRepository;
     @Autowired
-    OptionalResultVerifier orv;
+    private ArticleDAO articleDAO;
+    @Autowired
+    private OptionalResultVerifier orv;
 
     public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
         if(requestArticle.getHeading().isEmpty() || requestArticle.getText().isEmpty()){
@@ -78,5 +81,13 @@ public class ArticleService {
     public void deleteArticle(int articleId) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleRepository.delete(article);
+    }
+
+    public void likeArticle(int userId, int articleId) {
+        articleDAO.likeArticle(userId, articleId);
+    }
+
+    public void dislikeArticle(int userId, int articleId){
+        articleDAO.dislikeArticle(userId, articleId);
     }
 }

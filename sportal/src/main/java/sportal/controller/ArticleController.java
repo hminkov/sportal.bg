@@ -5,13 +5,18 @@ import org.springframework.web.bind.annotation.*;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
+import sportal.model.pojo.User;
 import sportal.service.ArticleService;
+
+import javax.servlet.http.HttpSession;
 
 @RestController
 public class ArticleController {
 
     @Autowired
     ArticleService articleService;
+    @Autowired
+    SessionManager sessionManager;
 
     @PostMapping("/articles/new")
     public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article){
@@ -34,5 +39,17 @@ public class ArticleController {
     public void deleteArticle(@PathVariable int articleId){
         //TODO validate admin privileges
         articleService.deleteArticle(articleId);
+    }
+
+    @PutMapping("/articles/{articleId}/like")
+    public void likeArticle(@PathVariable int articleId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        articleService.likeArticle(loggedUser.getId(), articleId);
+    }
+
+    @PutMapping("/articles/{articleId}/dislike")
+    public void dislikeArticle(@PathVariable int articleId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        articleService.dislikeArticle(loggedUser.getId(), articleId);
     }
 }
