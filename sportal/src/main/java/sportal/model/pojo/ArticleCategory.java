@@ -1,5 +1,6 @@
 package sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +20,9 @@ public class ArticleCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String categoryName;
-//    @OneToMany(mappedBy = "category")
-//    private List<Article> articles;
+    @Column(name = "category_name")
+    private String name;
+    @JsonBackReference
+    @OneToMany(mappedBy = "category")
+    private List<Article> articles;
 }

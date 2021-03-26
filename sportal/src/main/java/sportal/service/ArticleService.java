@@ -5,7 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dto.CreateArticleRequestDTO;
-import sportal.model.dto.CreateArticleResponseDTO;
+import sportal.model.dto.ArticleResponseDTO;
+import sportal.model.dto.EditArticleRequestDTO;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.ArticleCategory;
 import sportal.model.pojo.User;
@@ -29,7 +30,7 @@ public class ArticleService {
     @Autowired
     OptionalResultVerifier orv;
 
-    public CreateArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
+    public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
         if(requestArticle.getHeading().isEmpty() || requestArticle.getText().isEmpty()){
             throw new BadRequestException("Articles must have a heading and a body");
         }
@@ -38,12 +39,41 @@ public class ArticleService {
         realArticle.setArticleText((requestArticle.getText()));
         User user = orv.verifyOptionalResult(userRepository.findById(requestArticle.getCreatorId()));
         realArticle.setAuthor(user);
-        ArticleCategory category = new ArticleCategory();
-        category.setCategoryName(requestArticle.getCategory());
-        realArticle.setCategory(category);
-        categoryRepository.save(category);
+        realArticle.setCategory(createNewCategoryOrReturnMatching(requestArticle.getCategory()));
         realArticle.setPostDate(LocalDateTime.now());
         articleRepository.save(realArticle);
-        return new CreateArticleResponseDTO(realArticle);
+        return new ArticleResponseDTO(realArticle);
+    }
+
+    public ArticleResponseDTO getArticle(int id) {
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(id)));
+    }
+
+    public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle) {
+        Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(editedArticle.getId()));
+        ogArticle.setHeading(editedArticle.getHeading());
+        ogArticle.setArticleText(editedArticle.getText());
+        String editedCategoryName = editedArticle.getCategory();
+        if(!ogArticle.getCategory().getName().equals(editedCategoryName)){
+            ogArticle.setCategory(createNewCategoryOrReturnMatching(editedCategoryName));
+        }
+        else {
+            ogArticle.setCategory(orv.verifyOptionalResult(categoryRepository.findByName(editedCategoryName)));
+        }
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(ogArticle.getId())));
+    }
+
+    private ArticleCategory createNewCategoryOrReturnMatching(String categoryName){
+        if(categoryRepository.findByName(categoryName).isEmpty()){
+            ArticleCategory newCategory = new ArticleCategory();
+            newCategory.setName(categoryName);
+            categoryRepository.save(newCategory);
+        }
+        return orv.verifyOptionalResult(categoryRepository.findByName(categoryName));
+    }
+
+    public void deleteArticle(int articleId) {
+        Article article = orv.verifyOptionalResult(articleRepository.findById(articleId));
+        articleRepository.delete(article);
     }
 }

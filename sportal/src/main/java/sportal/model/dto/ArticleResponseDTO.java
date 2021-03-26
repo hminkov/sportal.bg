@@ -12,7 +12,7 @@ import sportal.model.pojo.User;
 @Getter
 @Setter
 @Component
-public class CreateArticleResponseDTO {
+public class ArticleResponseDTO {
 
     private int id;
     private User author;
@@ -20,7 +20,7 @@ public class CreateArticleResponseDTO {
     private String text;
     private ArticleCategory category;
 
-    public CreateArticleResponseDTO(Article article){
+    public ArticleResponseDTO(Article article){
         id = article.getId();
         author = article.getAuthor();
         heading = article.getHeading();
