@@ -2,6 +2,7 @@ package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sportal.model.dao.CommentDAO;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
@@ -20,6 +21,8 @@ public class CommentService {
     IArticleRepository articleRepository;
     @Autowired
     OptionalResultVerifier orv;
+    @Autowired
+    CommentDAO commentDAO;
 
     public void addComment(User loggedUser, AddCommentRequestDTO addedComment) {
         Comment comment = new Comment();
@@ -28,5 +31,13 @@ public class CommentService {
         comment.setCommentText(addedComment.getText());
         comment.setPostDate(LocalDateTime.now());
         commentRepository.save(comment);
+    }
+
+    public void likeComment(int commentId, int userId) {
+        commentDAO.likeComment(commentId, userId);
+    }
+
+    public void dislikeComment(int commentId, int userId){
+        commentDAO.dislikeComment(commentId, userId);
     }
 }
