@@ -15,19 +15,20 @@ public class AbstractController {
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleBadRequest(BadRequestException e){
-        return new ErrorDTO(e.getMessage());
+        return new ErrorDTO(e.getMessage() + " - error " + HttpStatus.BAD_REQUEST);
     }
 
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFound(NotFoundException e){
-        return new ErrorDTO(e.getMessage());
+        return new ErrorDTO(e.getMessage() + " - error " + HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorDTO handleNotAuthorized(AuthenticationException e){
-        return new ErrorDTO(e.getMessage());
+        return new ErrorDTO(e.getMessage()  + " - error " + HttpStatus.UNAUTHORIZED);
     }
+
 }

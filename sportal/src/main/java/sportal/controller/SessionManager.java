@@ -9,7 +9,7 @@ import sportal.model.repository.IUserRepository;
 import javax.servlet.http.HttpSession;
 
 @Component
-public class SessionManager {
+public class SessionManager extends AbstractController{
 
     private static final String LOGGED_USER_ID = "LOGGED_USER_ID";
 

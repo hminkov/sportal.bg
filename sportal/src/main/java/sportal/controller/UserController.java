@@ -11,17 +11,12 @@ import sportal.service.UserService;
 import javax.servlet.http.HttpSession;
 
 @RestController
-public class UserController {
+public class UserController extends AbstractController{
 
     @Autowired
     private UserService userService;
     @Autowired
     private SessionManager sessionManager;
-
-    @GetMapping("/hi")
-    public String hi(){
-        return "Privet";
-    }
 
     @PostMapping("/users/register")
     public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO){
@@ -38,6 +33,11 @@ public class UserController {
     @PostMapping("/users/logout")
     public void logout(HttpSession ses){
         sessionManager.logoutUser(ses);
+    }
+
+    @GetMapping("/users/{id}")
+    public LoginResponseUserDTO userInfoById(@PathVariable int id){
+        return userService.getUserById(id);
     }
 
 }

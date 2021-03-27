@@ -11,7 +11,7 @@ import sportal.service.CommentService;
 import javax.servlet.http.HttpSession;
 
 @RestController
-public class CommentController {
+public class CommentController extends AbstractController{
 
     @Autowired
     SessionManager sessionManager;

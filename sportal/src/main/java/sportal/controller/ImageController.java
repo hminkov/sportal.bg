@@ -13,7 +13,7 @@ import java.io.*;
 import java.nio.file.Files;
 
 @RestController
-public class ImageController {
+public class ImageController extends AbstractController{
 
     @Autowired
     IArticleRepository articleRepository;

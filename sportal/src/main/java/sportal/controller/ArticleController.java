@@ -11,7 +11,7 @@ import sportal.service.ArticleService;
 import javax.servlet.http.HttpSession;
 
 @RestController
-public class ArticleController {
+public class ArticleController extends AbstractController{
 
     @Autowired
     ArticleService articleService;
