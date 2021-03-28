@@ -40,4 +40,12 @@ public class CommentService {
     public void dislikeComment(int commentId, int userId){
         commentDAO.dislikeComment(commentId, userId);
     }
+
+    public void unlikeComment(int userId, int commentId) {
+        commentDAO.unlikeComment(userId, commentId);
+    }
+
+    public void undislikeComment(int userId, int commentId) {
+        commentDAO.undislikeComment(userId, commentId);
+    }
 }

@@ -81,4 +81,16 @@ public class ArticleController extends AbstractController{
         User loggedUser = sessionManager.getLoggedUser(ses);
         articleService.dislikeArticle(loggedUser.getId(), articleId);
     }
+
+    @PutMapping("/articles/{articleId}/unlike")
+    public void unlikeArticle(@PathVariable int articleId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        articleService.unlikeArticle(loggedUser.getId(), articleId);
+    }
+
+    @PutMapping("/articles/{articleId}/undislike")
+    public void undislikeArticle(@PathVariable int articleId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        articleService.undislikeArticle(loggedUser.getId(), articleId);
+    }
 }

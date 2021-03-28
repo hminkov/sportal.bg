@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
+import sportal.exceptions.BadRequestException;
 import sportal.model.pojo.Article;
 
 import java.sql.Connection;
@@ -41,6 +42,9 @@ public class ArticleDAO {
     private LikeAndDislikeDAO likeAndDislikeDAO;
 
     public void likeArticle(int userId, int articleId) {
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_LIKES_QUERY)){
+            throw new BadRequestException("User already likes this article");
+        }
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_DISLIKES_QUERY)){
             likeAndDislikeDAO.removeDislikeAndAddLikeOrViceVersa(userId, articleId, REMOVE_DISLIKE_QUERY, ADD_LIKE_QUERY);
             return;
@@ -49,11 +53,32 @@ public class ArticleDAO {
     }
 
     public void dislikeArticle(int userId, int articleId){
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_DISLIKES_QUERY)){
+            throw new BadRequestException("User already dislikes this article");
+        }
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_LIKES_QUERY)){
             likeAndDislikeDAO.removeDislikeAndAddLikeOrViceVersa(userId, articleId, REMOVE_LIKE_QUERY, ADD_DISLIKE_QUERY);
             return;
         }
-        jdbcTemplate.update(ADD_DISLIKE_QUERY);
+        jdbcTemplate.update(ADD_DISLIKE_QUERY, userId, articleId);
+    }
+
+    public void unlikeArticle(int userId, int articleId) {
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_LIKES_QUERY)){
+            jdbcTemplate.update(REMOVE_LIKE_QUERY, userId, articleId);
+        }
+        else{
+            throw new BadRequestException("Trying to remove an non-extant entry");
+        }
+    }
+
+    public void undislikeArticle(int userId, int articleId){
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_DISLIKES_QUERY)){
+            jdbcTemplate.update(REMOVE_DISLIKE_QUERY, userId, articleId);
+        }
+        else{
+            throw new BadRequestException("Trying to remove an non-extant entry");
+        }
     }
 
     private Article packArticle(SqlRowSet rowSet) {
@@ -73,4 +98,6 @@ public class ArticleDAO {
         }
         return topFiveArticles;
     }
+
+
 }

@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import sportal.exceptions.BadRequestException;
 
 @Component
 @NoArgsConstructor
@@ -30,6 +31,9 @@ public class CommentDAO {
 
 
     public void likeComment(int userId, int commentId) {
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_LIKES_QUERY)){
+            throw new BadRequestException("User already likes this comment");
+        }
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_DISLIKES_QUERY)){
             likeAndDislikeDAO.removeDislikeAndAddLikeOrViceVersa(userId, commentId, REMOVE_DISLIKE_QUERY, ADD_LIKE_QUERY);
             return;
@@ -38,12 +42,32 @@ public class CommentDAO {
     }
 
     public void dislikeComment(int userId, int commentId){
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_DISLIKES_QUERY)){
+            throw new BadRequestException("User already dislikes this comment");
+        }
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_LIKES_QUERY)){
             likeAndDislikeDAO.removeDislikeAndAddLikeOrViceVersa(userId, commentId, REMOVE_LIKE_QUERY, ADD_DISLIKE_QUERY);
             return;
         }
-        jdbcTemplate.update(ADD_DISLIKE_QUERY);
+        jdbcTemplate.update(ADD_DISLIKE_QUERY, userId, commentId);
     }
 
 
+    public void unlikeComment(int userId, int commentId) {
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_LIKES_QUERY)){
+            jdbcTemplate.update(REMOVE_LIKE_QUERY, userId, commentId);
+        }
+        else{
+            throw new BadRequestException("Trying to remove non-extant entry");
+        }
+    }
+
+    public void undislikeComment(int userId, int commentId) {
+        if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, commentId, SELECT_DISLIKES_QUERY)){
+            jdbcTemplate.update(REMOVE_DISLIKE_QUERY, userId, commentId);
+        }
+        else{
+            throw new BadRequestException("Trying to remove non-extant entry");
+        }
+    }
 }
