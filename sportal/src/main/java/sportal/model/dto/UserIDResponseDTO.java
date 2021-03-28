@@ -4,15 +4,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import sportal.model.pojo.User;
 
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Component
-public class CreateArticleRequestDTO {
+public class UserIDResponseDTO {
 
-    private int creatorId;
-    private String category;
-    private String heading;
-    private String text;
+    private int id;
+
+    public UserIDResponseDTO(User u){
+        this.id = u.getId();
+    }
 }

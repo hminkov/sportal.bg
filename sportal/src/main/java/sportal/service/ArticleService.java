@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dao.ArticleDAO;
-import sportal.model.dto.ArticleByHeadingDTO;
+import sportal.model.dto.ArticleHeadingResponseDTO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
@@ -58,11 +58,6 @@ public class ArticleService {
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(id)));
     }
 
-    public List<Article> getArticleByAuthor(String authorName) {
-        List<Article> articlesByAuthor = articleDAO.findArticleByAuthor(authorName);
-        return articlesByAuthor;
-    }
-
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
         Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
@@ -99,12 +94,23 @@ public class ArticleService {
         articleDAO.dislikeArticle(userId, articleId);
     }
 
-    public List<ArticleByHeadingDTO> getAllArticles() {
+    public List<ArticleHeadingResponseDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
-        List<ArticleByHeadingDTO> articleByHeadingDTO = new ArrayList<>();
+        List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
         for(Article a : articles){
-            articleByHeadingDTO.add(new ArticleByHeadingDTO(a));
+            articleByHeadingDTO.add(new ArticleHeadingResponseDTO(a));
         }
         return articleByHeadingDTO;
+    }
+
+    public List<ArticleResponseDTO> getArticleByAuthor(User authorId) {
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+        for(Article a : articles){
+            if(a.getAuthor().getId() == authorId.getId()) {
+                articleResponseDTO.add(new ArticleResponseDTO(a));
+            }
+        }
+        return articleResponseDTO;
     }
 }

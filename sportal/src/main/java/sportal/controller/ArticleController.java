@@ -2,11 +2,12 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sportal.model.dto.ArticleByHeadingDTO;
+import sportal.model.dto.ArticleHeadingResponseDTO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
 import sportal.model.pojo.User;
+import sportal.model.repository.IUserRepository;
 import sportal.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,8 @@ import java.util.List;
 @RestController
 public class ArticleController extends AbstractController{
 
+    @Autowired
+    IUserRepository iUserRepository;
     @Autowired
     ArticleService articleService;
     @Autowired
@@ -31,13 +34,13 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-//    @GetMapping("/articles/author/{author_name}")
-//    public ArticleResponseDTO viewArticleByAuthor(@PathVariable String author_name){
-//        return articleService.getArticleByAuthor(author_name);
-//    }
+    @GetMapping("/users/{username}/article")
+    public List<ArticleResponseDTO> getArticleByAuthor(@PathVariable String username){
+        return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
+    }
 
     @GetMapping("/articles")
-    public List<ArticleByHeadingDTO> getAllArticleTitles(){
+    public List<ArticleHeadingResponseDTO> getAllArticleTitles(){
         return articleService.getAllArticles();
     }
 

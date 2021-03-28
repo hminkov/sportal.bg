@@ -10,10 +10,10 @@ import sportal.model.pojo.Article;
 @Getter
 @Setter
 @Component
-public class ArticleByHeadingDTO {
+public class ArticleHeadingResponseDTO {
     private String heading;
 
-    public ArticleByHeadingDTO(Article article){
+    public ArticleHeadingResponseDTO(Article article){
         this.heading = article.getHeading();
     }
 }

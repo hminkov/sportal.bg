@@ -8,5 +8,4 @@ import sportal.model.pojo.Article;
 @Repository
 @Component
 public interface IArticleRepository extends JpaRepository<Article, Integer> {
-    Article findByAuthor(int author_id);
 }
