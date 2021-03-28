@@ -30,8 +30,9 @@ public class SessionManager extends AbstractController{
         ses.setAttribute(LOGGED_USER_ID, id);
     }
 
-    public void logoutUser(HttpSession ses) {
+    public String logoutUser(HttpSession ses) {
         ses.invalidate();
+        return "You successfully logged out! Cya soon!";
     }
 
 

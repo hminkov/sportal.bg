@@ -2,6 +2,7 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sportal.exceptions.BadRequestException;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.pojo.User;
@@ -19,6 +20,8 @@ public class CommentController extends AbstractController{
     ArticleService articleService;
     @Autowired
     CommentService commentService;
+    @Autowired
+    UserController userController;
 
     @PostMapping("/articles/{articleId}/comments")
     public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
@@ -26,6 +29,18 @@ public class CommentController extends AbstractController{
         commentService.addComment(loggedUser, comment);
         return articleService.getArticleById(comment.getArticleId());
     }
+
+//    @DeleteMapping("/comments{commentId}")
+//    public ArticleResponseDTO deleteComment(HttpSession ses, @PathVariable int commentId){
+//        User loggedUser = sessionManager.getLoggedUser(ses);
+//        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), commentId)){
+//            return commentService.deleteComment(commentId);
+//        }
+//        else{
+//            throw new BadRequestException("You can only delete your own comments");
+//        }
+//    }
+
 
     @PutMapping("/comments/{commentId}/like")
     public void likeComment(HttpSession ses, @PathVariable int commentId){
@@ -49,5 +64,9 @@ public class CommentController extends AbstractController{
     public void undislikeComment(@PathVariable int commentId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
         commentService.undislikeComment(loggedUser.getId(), commentId);
+    }
+
+    private boolean userOwnsComment(int userId, int commentId) {
+        return commentService.userOwnsComment(userId, commentId);
     }
 }

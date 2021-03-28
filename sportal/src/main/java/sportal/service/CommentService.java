@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportal.model.dao.CommentDAO;
 import sportal.model.dto.AddCommentRequestDTO;
+import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
@@ -48,4 +49,13 @@ public class CommentService {
     public void undislikeComment(int userId, int commentId) {
         commentDAO.undislikeComment(userId, commentId);
     }
+
+    public boolean userOwnsComment(int userId, int commentId) {
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        return comment.getUser().getId() == userId;
+    }
+
+//    public ArticleResponseDTO deleteComment(int commentId) {
+//        Comment comment
+//    }
 }
