@@ -113,4 +113,24 @@ public class ArticleService {
         }
         return articleResponseDTO;
     }
+
+    public List<ArticleResponseDTO> getTopFiveMostViewed() {
+        List<ArticleResponseDTO> articleResponseDTOS = new ArrayList<>();
+        List<Article> articles = articleDAO.topFiveMostViewedArticles();
+        for(Article a : articles){
+            articleResponseDTOS.add(new ArticleResponseDTO(a));
+        }
+        return articleResponseDTOS;
+    }
+
+//    public List<ArticleResponseDTO> getArticleByCategory(ArticleCategory category) {
+//        List<Article> articles = articleRepository.findAll();
+//        List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+//        for(Article a : articles){
+//            if(a.getCategory().getName().equals(category.getName())) {
+//                articleResponseDTO.add(new ArticleResponseDTO(a));
+//            }
+//        }
+//        return articleResponseDTO;
+//    }
 }

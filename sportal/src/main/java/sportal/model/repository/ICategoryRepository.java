@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 @Component
 public interface ICategoryRepository extends JpaRepository<ArticleCategory, Integer> {
-
     Optional<ArticleCategory> findByName(String catName);
+//    ArticleCategory findArticleCategoryByName(String catName);
 }

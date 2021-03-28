@@ -7,6 +7,7 @@ import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
 import sportal.model.pojo.User;
+import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IUserRepository;
 import sportal.service.ArticleService;
 
@@ -18,6 +19,8 @@ public class ArticleController extends AbstractController{
 
     @Autowired
     IUserRepository iUserRepository;
+    @Autowired
+    ICategoryRepository iCategoryRepository;
     @Autowired
     ArticleService articleService;
     @Autowired
@@ -38,6 +41,17 @@ public class ArticleController extends AbstractController{
     public List<ArticleResponseDTO> getArticleByAuthor(@PathVariable String username){
         return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
     }
+
+
+    @GetMapping("/articles/top5")
+    public List<ArticleResponseDTO> topFiveMostViewedArticles(){
+        return articleService.getTopFiveMostViewed();
+    }
+
+//    @GetMapping("/articles/{category}")
+//    public List<ArticleResponseDTO> getArticleByCategory(@PathVariable String category){
+//        return articleService.getArticleByCategory(iCategoryRepository.findArticleCategoryByName(category));
+//    }
 
     @GetMapping("/articles")
     public List<ArticleHeadingResponseDTO> getAllArticleTitles(){
