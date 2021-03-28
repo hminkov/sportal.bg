@@ -94,6 +94,14 @@ public class ArticleService {
         articleDAO.dislikeArticle(userId, articleId);
     }
 
+    public void unlikeArticle(int userId, int articleId) {
+        articleDAO.unlikeArticle(userId, articleId);
+    }
+
+    public void undislikeArticle(int userId, int articleId) {
+        articleDAO.undislikeArticle(userId, articleId);
+    }
+
     public List<ArticleHeadingResponseDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
         List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
@@ -122,6 +130,8 @@ public class ArticleService {
         }
         return articleResponseDTOS;
     }
+
+
 
 //    public List<ArticleResponseDTO> getArticleByCategory(ArticleCategory category) {
 //        List<Article> articles = articleRepository.findAll();

@@ -38,4 +38,16 @@ public class CommentController extends AbstractController{
         User loggedUser = sessionManager.getLoggedUser(ses);
         commentService.dislikeComment(loggedUser.getId(), commentId);
     }
+
+    @PutMapping("/comments/{commentId}/unlike")
+    public void unlikeComment(@PathVariable int commentId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        commentService.unlikeComment(loggedUser.getId(), commentId);
+    }
+
+    @PutMapping("/comments/{commentId}/undislike")
+    public void undislikeComment(@PathVariable int commentId, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        commentService.undislikeComment(loggedUser.getId(), commentId);
+    }
 }
