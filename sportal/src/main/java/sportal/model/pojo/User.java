@@ -25,10 +25,13 @@ public class User extends POJO{
     @JsonIgnore
     private String password;
     private String email;
-    @JsonBackReference
+
     @OneToMany(mappedBy = "author")
+    @JsonBackReference
     private List<Article> articles;
+
     @OneToMany(mappedBy = "user")
+    @JsonManagedReference
     private List<Comment> comments;
 
     public User(RegisterRequestUserDTO userDTO){

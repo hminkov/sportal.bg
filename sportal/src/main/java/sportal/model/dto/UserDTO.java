@@ -4,21 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-import sportal.model.pojo.User;
 
 @NoArgsConstructor
 @Setter
 @Getter
 @Component
-public class UserIDResponseDTO {
-
-    private int id;
+public class UserDTO {
     private String username;
     private String email;
-
-    public UserIDResponseDTO(User u){
-        id = u.getId();
-        username = u.getUsername();
-        email = u.getEmail();
-    }
+    private String password;
+    private String newPassword;
+    private String confirmationPassword;
 }

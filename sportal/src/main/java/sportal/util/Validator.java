@@ -1,6 +1,11 @@
 package sportal.util;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import sportal.exceptions.BadRequestException;
+import sportal.model.dto.UserDTO;
+import sportal.model.pojo.User;
+import sportal.model.repository.IUserRepository;
 
 public class Validator {
     private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -17,6 +22,22 @@ public class Validator {
             throw new BadRequestException("Password format is not valid. " +
                     "Please make sure your password contains at least 8 characters, " +
                     "one digit, one lower alpha char and one upper alpha char");
+        }
+    }
+
+    public static String changePassword(UserDTO userDTO, User user, IUserRepository userRepository){
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
+            if(!userDTO.getNewPassword().equals(user.getPassword())) {
+                passwordFormatValidator(userDTO.getNewPassword());
+                user.setPassword(encoder.encode(userDTO.getNewPassword()));
+                userRepository.save(user);
+                return "Password changed";
+            }else{
+                return "Your new password should not be the same as the old one! Try again";
+            }
+        } else {
+            throw new BadRequestException("Entered passwords must match!");
         }
     }
 }

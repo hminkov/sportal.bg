@@ -19,12 +19,14 @@ public class Comment extends POJO{
 
     private String commentText;
     private LocalDateTime postDate;
-    @JsonBackReference
+
     @ManyToOne
     @JoinColumn(name = "article_id")
-    private Article article;
     @JsonBackReference
+    private Article article;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 }
