@@ -43,4 +43,5 @@ public class User extends POJO{
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private List<Role> roles;
+
 }

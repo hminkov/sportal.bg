@@ -51,7 +51,7 @@ public class ArticleService {
         return new ArticleResponseDTO(realArticle);
     }
 
-    public ArticleResponseDTO getArticleById(int id) {
+    public synchronized ArticleResponseDTO getArticleById(int id) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(id));
         article.setViews(article.getViews()+1);
         articleRepository.save(article);

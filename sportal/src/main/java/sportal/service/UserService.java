@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
+import sportal.model.dao.UserDAO;
 import sportal.model.dto.LoginRequestUserDTO;
 import sportal.model.dto.LoginResponseUserDTO;
 import sportal.model.dto.RegisterRequestUserDTO;
@@ -22,6 +23,8 @@ public class UserService {
 
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    private UserDAO userDao;
 
 
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
@@ -78,5 +81,9 @@ public class UserService {
                 throw new AuthenticationException("Wrong credentials");
             }
         }
+    }
+
+    public boolean userIsAdmin(User user) {
+        return userDao.userIsAdmin(user);
     }
 }

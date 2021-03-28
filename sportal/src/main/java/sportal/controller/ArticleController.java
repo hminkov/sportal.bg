@@ -2,6 +2,7 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.ArticleHeadingResponseDTO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
@@ -25,11 +26,17 @@ public class ArticleController extends AbstractController{
     ArticleService articleService;
     @Autowired
     SessionManager sessionManager;
+    @Autowired
+    private UserController userController;
 
     @PostMapping("/articles/new")
-    public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article){
-        //TODO validate admin privileges
-        return articleService.postNewArticle(article);
+    public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article, HttpSession ses){
+        if(isAdmin(sessionManager.getLoggedUser(ses))){
+            return articleService.postNewArticle(article);
+        }
+        else{
+            throw new AuthenticationException("Requires admin privileges");
+        }
     }
 
     @GetMapping("/articles/{id}")
@@ -59,15 +66,23 @@ public class ArticleController extends AbstractController{
     }
 
     @PutMapping("/articles/{articleId}")
-    public ArticleResponseDTO editArticle(@PathVariable int articleId, @RequestBody EditArticleRequestDTO article){
-        //TODO validate admin privileges
-        return articleService.editArticle(article, articleId);
+    public ArticleResponseDTO editArticle(@PathVariable int articleId, @RequestBody EditArticleRequestDTO article, HttpSession ses){
+        if(isAdmin(sessionManager.getLoggedUser(ses))){
+            return articleService.editArticle(article, articleId);
+        }
+        else{
+            throw new AuthenticationException("Requires admin privileges");
+        }
     }
 
     @DeleteMapping("/articles/{articleId}")
-    public void deleteArticle(@PathVariable int articleId){
-        //TODO validate admin privileges
-        articleService.deleteArticle(articleId);
+    public void deleteArticle(@PathVariable int articleId, HttpSession ses){
+        if(isAdmin(sessionManager.getLoggedUser(ses))){
+            articleService.deleteArticle(articleId);
+        }
+        else{
+            throw new AuthenticationException("Requires admin privileges");
+        }
     }
 
     @PutMapping("/articles/{articleId}/like")
@@ -92,5 +107,9 @@ public class ArticleController extends AbstractController{
     public void undislikeArticle(@PathVariable int articleId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
         articleService.undislikeArticle(loggedUser.getId(), articleId);
+    }
+
+    private boolean isAdmin(User user){
+        return userController.userIsAdmin(user);
     }
 }

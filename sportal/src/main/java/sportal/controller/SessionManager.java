@@ -33,4 +33,6 @@ public class SessionManager extends AbstractController{
     public void logoutUser(HttpSession ses) {
         ses.invalidate();
     }
+
+
 }
