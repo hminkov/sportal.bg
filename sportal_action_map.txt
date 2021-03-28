@@ -1,6 +1,0 @@
-User:
-login, logout, register, edit, delete, forgot password
-Article:
-add, edit, delete, like, dislike, sort, get by id (including article's comments)
-Comment:
-add, edit, delete, like, dislike, reply, get user's own comments
