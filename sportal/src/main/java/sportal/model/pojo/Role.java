@@ -15,11 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 @Component
-public class Role {
+public class Role extends POJO{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String roleName;
 
     @ManyToMany(mappedBy = "roles")

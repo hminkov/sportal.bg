@@ -15,17 +15,15 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "article_comments")
 @Component
-public class Comment {
+public class Comment extends POJO{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String commentText;
     private LocalDateTime postDate;
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "article_id")
     private Article article;
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -16,6 +16,7 @@ public class LoginResponseUserDTO {
     private int id;
     private String username;
     private String email;
+    private String loginConfirmation = "You successfully logged in!";
 
     public LoginResponseUserDTO(User u) {
         id = u.getId();

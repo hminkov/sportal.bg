@@ -13,6 +13,7 @@ import sportal.model.dto.RegisterRequestUserDTO;
 import sportal.model.dto.RegisterResponseUserDTO;
 import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
+import sportal.util.Validator;
 
 import java.util.Optional;
 
@@ -22,7 +23,10 @@ public class UserService {
     @Autowired
     IUserRepository userRepository;
 
+
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
+        //check if email format is correct
+        Validator.emailFormatValidator(userDTO.getEmail());
         //check if email exists
         if(userRepository.findByEmail(userDTO.getEmail()) != null){
             throw new BadRequestException("Email already exists");
@@ -32,12 +36,16 @@ public class UserService {
             throw new BadRequestException("Username already exists");
         }
         //check if password format is correct
+        Validator.passwordFormatValidator(userDTO.getPassword());
         //check if passwords are equal
-        //set password for this user
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        userDTO.setPassword(encoder.encode(userDTO.getPassword()));
-
-        //save new user
+        if (userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
+            //set cached version of the password for this user
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            userDTO.setPassword(encoder.encode(userDTO.getPassword()));
+        } else {
+            throw new BadRequestException("The passwords does not match!");
+        }
+        //save new user to DB by userRepository
         User user = new User(userDTO);
         user = userRepository.save(user);
         RegisterResponseUserDTO responseUserDTO = new RegisterResponseUserDTO(user);

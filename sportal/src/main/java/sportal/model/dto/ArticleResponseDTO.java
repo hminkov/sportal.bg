@@ -18,11 +18,11 @@ import java.util.List;
 public class ArticleResponseDTO {
 
     private int id;
-    private User author;
     private String heading;
     private String text;
-    private ArticleCategory category;
     private int views;
+    private User author;
+    private ArticleCategory category;
     private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){

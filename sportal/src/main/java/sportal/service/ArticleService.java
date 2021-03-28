@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dao.ArticleDAO;
+import sportal.model.dto.ArticleByHeadingDTO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
@@ -17,6 +18,8 @@ import sportal.model.repository.IUserRepository;
 import sportal.util.OptionalResultVerifier;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Component
@@ -48,11 +51,16 @@ public class ArticleService {
         return new ArticleResponseDTO(realArticle);
     }
 
-    public ArticleResponseDTO getArticle(int id) {
+    public ArticleResponseDTO getArticleById(int id) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(id));
         article.setViews(article.getViews()+1);
         articleRepository.save(article);
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(id)));
+    }
+
+    public List<Article> getArticleByAuthor(String authorName) {
+        List<Article> articlesByAuthor = articleDAO.findArticleByAuthor(authorName);
+        return articlesByAuthor;
     }
 
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
@@ -89,5 +97,14 @@ public class ArticleService {
 
     public void dislikeArticle(int userId, int articleId){
         articleDAO.dislikeArticle(userId, articleId);
+    }
+
+    public List<ArticleByHeadingDTO> getAllArticles() {
+        List<Article> articles = articleRepository.findAll();
+        List<ArticleByHeadingDTO> articleByHeadingDTO = new ArrayList<>();
+        for(Article a : articles){
+            articleByHeadingDTO.add(new ArticleByHeadingDTO(a));
+        }
+        return articleByHeadingDTO;
     }
 }

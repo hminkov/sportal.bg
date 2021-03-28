@@ -16,18 +16,15 @@ import java.util.List;
 @Entity
 @Table(name = "articles")
 @Component
-public class Article {
+public class Article extends POJO{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private int views;
     private String heading;
     private String articleText;
     private LocalDateTime postDate;
     @JsonManagedReference
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "author_id")
     private User author;
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;

@@ -15,11 +15,8 @@ import java.util.List;
 @Entity
 @Table(name = "article_categories")
 @Component
-public class ArticleCategory {
+public class ArticleCategory extends POJO{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     @Column(name = "category_name")
     private String name;
     @JsonBackReference

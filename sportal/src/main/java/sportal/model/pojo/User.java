@@ -2,6 +2,7 @@ package sportal.model.pojo;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,17 +19,17 @@ import java.util.List;
 @Entity
 @Table(name="users")
 @Component
-public class User {
+public class User extends POJO{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
     private String username;
+    @JsonIgnore
     private String password;
     private String email;
     @JsonBackReference
     @OneToMany(mappedBy = "author")
     private List<Article> articles;
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments;
 
     public User(RegisterRequestUserDTO userDTO){
         username = userDTO.getUsername();
@@ -38,7 +39,7 @@ public class User {
     @ManyToMany
     @JoinTable(
             name = "users_have_roles",
-            joinColumns = { @JoinColumn(name = "user_id")},
+            joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
     private List<Role> roles;

@@ -14,10 +14,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "article_images")
-public class ArticleImage {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class ArticleImage extends POJO{
+
     private String url;
     @ManyToOne
     @JoinColumn(name = "article_id")

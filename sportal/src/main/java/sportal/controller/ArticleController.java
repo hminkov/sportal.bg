@@ -2,6 +2,7 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sportal.model.dto.ArticleByHeadingDTO;
 import sportal.model.dto.CreateArticleRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditArticleRequestDTO;
@@ -9,6 +10,7 @@ import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 public class ArticleController extends AbstractController{
@@ -26,7 +28,17 @@ public class ArticleController extends AbstractController{
 
     @GetMapping("/articles/{id}")
     public ArticleResponseDTO viewArticle(@PathVariable int id){
-        return articleService.getArticle(id);
+        return articleService.getArticleById(id);
+    }
+
+//    @GetMapping("/articles/author/{author_name}")
+//    public ArticleResponseDTO viewArticleByAuthor(@PathVariable String author_name){
+//        return articleService.getArticleByAuthor(author_name);
+//    }
+
+    @GetMapping("/articles")
+    public List<ArticleByHeadingDTO> getAllArticleTitles(){
+        return articleService.getAllArticles();
     }
 
     @PutMapping("/articles/{articleId}")

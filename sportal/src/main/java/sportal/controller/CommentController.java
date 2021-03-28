@@ -24,7 +24,7 @@ public class CommentController extends AbstractController{
     public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         commentService.addComment(loggedUser, comment);
-        return articleService.getArticle(comment.getArticleId());
+        return articleService.getArticleById(comment.getArticleId());
     }
 
     @PutMapping("/comments/{commentId}/like")

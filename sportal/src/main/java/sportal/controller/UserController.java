@@ -2,6 +2,7 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sportal.controller.validations.LoginValidator;
 import sportal.model.dto.LoginRequestUserDTO;
 import sportal.model.dto.LoginResponseUserDTO;
 import sportal.model.dto.RegisterRequestUserDTO;
@@ -19,18 +20,20 @@ public class UserController extends AbstractController{
     private SessionManager sessionManager;
 
     @PostMapping("/users/register")
-    public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO){
+    public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
+//        LoginValidator.validateUser(ses, "Registration is redundant, you are already an active user");
         return userService.registerUser(userDTO);
     }
 
     @PostMapping("/users/login")
     public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
+//        LoginValidator.validateUser(ses,"This user has already logged in");
         LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
         sessionManager.loginUser(ses, responseDto.getId());
         return responseDto;
     }
 
-    @PostMapping("/users/logout")
+    @PostMapping("/users/{id}/logout")
     public void logout(HttpSession ses){
         sessionManager.logoutUser(ses);
     }
