@@ -55,7 +55,9 @@ public class CommentService {
         return comment.getUser().getId() == userId;
     }
 
-//    public ArticleResponseDTO deleteComment(int commentId) {
-//        Comment comment
-//    }
+    public ArticleResponseDTO deleteComment(int commentId) {
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        comment.setCommentText("deleted on " + LocalDateTime.now());
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId())));
+    }
 }
