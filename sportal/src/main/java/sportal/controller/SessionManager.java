@@ -36,4 +36,7 @@ public class SessionManager extends AbstractController{
     }
 
 
+    public boolean userAlreadyLogged(HttpSession ses) {
+        return ses.getAttribute(LOGGED_USER_ID) != null;
+    }
 }

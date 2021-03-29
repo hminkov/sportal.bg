@@ -31,8 +31,7 @@ public class UserController extends AbstractController{
 
     @PostMapping("/users/register")
     public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
-        User user =  sessionManager.getLoggedUser(ses);
-        if(user != null){
+        if(sessionManager.userAlreadyLogged(ses)){
             throw new BadRequestException("Trying to register while already logged");
         }
         return userService.registerUser(userDTO);
@@ -40,9 +39,8 @@ public class UserController extends AbstractController{
 
     @PostMapping("/users/login")
     public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
-        User user =  sessionManager.getLoggedUser(ses);
-        if(user != null){
-            throw new BadRequestException("Trying to register while already logged");
+        if(sessionManager.userAlreadyLogged(ses)){
+            throw new BadRequestException("Already logged");
         }
         LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
         sessionManager.loginUser(ses, responseDto.getId());

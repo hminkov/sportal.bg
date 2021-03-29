@@ -1,6 +1,7 @@
 package sportal.model.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -29,4 +31,6 @@ public class Comment extends POJO{
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+
+
 }

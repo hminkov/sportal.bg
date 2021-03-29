@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
+import sportal.model.dto.EditCommentRequestDTO;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.service.CommentService;
@@ -26,8 +27,7 @@ public class CommentController extends AbstractController{
     @PostMapping("/articles/{articleId}/comments")
     public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        commentService.addComment(loggedUser, comment);
-        return articleService.getArticleById(comment.getArticleId());
+        return commentService.addComment(loggedUser, comment);
     }
 
     @DeleteMapping("/comments/{commentId}")
@@ -38,6 +38,17 @@ public class CommentController extends AbstractController{
         }
         else{
             throw new BadRequestException("You can only delete your own comments");
+        }
+    }
+
+    @PutMapping("/comments")
+    public ArticleResponseDTO editComment(HttpSession ses, @RequestBody EditCommentRequestDTO comment){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(loggedUser.getId() == comment.getId()){
+            return commentService.editComment(comment);
+        }
+        else{
+            throw new BadRequestException("Only the owner of the comment can edit it");
         }
     }
 
