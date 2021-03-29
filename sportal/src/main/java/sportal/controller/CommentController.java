@@ -2,12 +2,12 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sportal.exceptions.BadRequestException;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.service.CommentService;
+import sportal.util.SessionManager;
 
 import javax.servlet.http.HttpSession;
 

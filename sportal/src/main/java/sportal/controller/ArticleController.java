@@ -3,14 +3,12 @@ package sportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.AuthenticationException;
-import sportal.model.dto.ArticleHeadingResponseDTO;
-import sportal.model.dto.CreateArticleRequestDTO;
-import sportal.model.dto.ArticleResponseDTO;
-import sportal.model.dto.EditArticleRequestDTO;
+import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IUserRepository;
 import sportal.service.ArticleService;
+import sportal.util.SessionManager;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -49,16 +47,15 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
     }
 
-
     @GetMapping("/articles/top5")
     public List<ArticleResponseDTO> topFiveMostViewedArticles(){
         return articleService.getTopFiveMostViewed();
     }
 
-//    @GetMapping("/articles/{category}")
-//    public List<ArticleResponseDTO> getArticleByCategory(@PathVariable String category){
-//        return articleService.getArticleByCategory(iCategoryRepository.findArticleCategoryByName(category));
-//    }
+    @GetMapping("/articles/{category}")
+    public ArticleCategoryDTO getArticleByCategory(@PathVariable String category){
+        return articleService.articleByCategory(category);
+    }
 
     @GetMapping("/articles")
     public List<ArticleHeadingResponseDTO> getAllArticleTitles(){
