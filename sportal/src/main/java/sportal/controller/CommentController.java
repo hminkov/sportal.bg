@@ -2,6 +2,7 @@ package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sportal.exceptions.BadRequestException;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditCommentRequestDTO;
@@ -44,7 +45,7 @@ public class CommentController extends AbstractController{
     @PutMapping("/comments")
     public ArticleResponseDTO editComment(HttpSession ses, @RequestBody EditCommentRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        if(loggedUser.getId() == comment.getId()){
+        if(commentService.userOwnsComment(loggedUser.getId(), comment.getId())){
             return commentService.editComment(comment);
         }
         else{
