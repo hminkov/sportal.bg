@@ -30,16 +30,16 @@ public class CommentController extends AbstractController{
         return articleService.getArticleById(comment.getArticleId());
     }
 
-//    @DeleteMapping("/comments{commentId}")
-//    public ArticleResponseDTO deleteComment(HttpSession ses, @PathVariable int commentId){
-//        User loggedUser = sessionManager.getLoggedUser(ses);
-//        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), commentId)){
-//            return commentService.deleteComment(commentId);
-//        }
-//        else{
-//            throw new BadRequestException("You can only delete your own comments");
-//        }
-//    }
+    @DeleteMapping("/comments/{commentId}")
+    public ArticleResponseDTO deleteComment(HttpSession ses, @PathVariable int commentId){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), commentId)){
+            return commentService.deleteComment(commentId);
+        }
+        else{
+            throw new BadRequestException("You can only delete your own comments");
+        }
+    }
 
 
     @PutMapping("/comments/{commentId}/like")
