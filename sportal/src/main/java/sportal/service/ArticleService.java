@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
+import sportal.exceptions.NotFoundException;
 import sportal.model.dao.ArticleDAO;
-import sportal.model.dto.ArticleHeadingResponseDTO;
-import sportal.model.dto.CreateArticleRequestDTO;
-import sportal.model.dto.ArticleResponseDTO;
-import sportal.model.dto.EditArticleRequestDTO;
+import sportal.model.dto.*;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.ArticleCategory;
 import sportal.model.pojo.User;
@@ -20,6 +18,7 @@ import sportal.util.OptionalResultVerifier;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Component
@@ -131,16 +130,13 @@ public class ArticleService {
         return articleResponseDTOS;
     }
 
-
-
-//    public List<ArticleResponseDTO> getArticleByCategory(ArticleCategory category) {
-//        List<Article> articles = articleRepository.findAll();
-//        List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
-//        for(Article a : articles){
-//            if(a.getCategory().getName().equals(category.getName())) {
-//                articleResponseDTO.add(new ArticleResponseDTO(a));
-//            }
-//        }
-//        return articleResponseDTO;
-//    }
+    public ArticleCategoryDTO articleByCategory(String category) {
+        Optional<ArticleCategory> categoryOptional = categoryRepository.findByName(category);
+        if(categoryOptional.isPresent()){
+            return new ArticleCategoryDTO(categoryOptional.get());
+        }
+        else{
+            throw new NotFoundException("Category not found");
+        }
+    }
 }

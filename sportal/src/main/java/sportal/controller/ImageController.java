@@ -23,7 +23,7 @@ public class ImageController extends AbstractController{
     @Value("${file.path}")
     private String filePath;
 
-    @PutMapping("images/upload")
+    @PutMapping("/article/{id}/images/upload")
     public ArticleImage upload(@PathVariable int id, @RequestPart MultipartFile file){
         //create physical file -> java.io.File
         File pFile = new File(filePath + File.separator + id + "_" + System.nanoTime() + ".png");

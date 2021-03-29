@@ -3,7 +3,6 @@ package sportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import sportal.controller.validations.LoginValidator;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dto.LoginRequestUserDTO;
 import sportal.model.dto.LoginResponseUserDTO;
@@ -13,8 +12,8 @@ import sportal.model.pojo.User;
 import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.DBException;
 import sportal.model.dto.*;
-import sportal.model.pojo.User;
 import sportal.service.UserService;
+import sportal.util.SessionManager;
 
 import javax.servlet.http.HttpSession;
 import java.sql.SQLException;

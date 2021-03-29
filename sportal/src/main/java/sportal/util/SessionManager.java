@@ -1,7 +1,8 @@
-package sportal.controller;
+package sportal.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import sportal.controller.AbstractController;
 import sportal.exceptions.AuthenticationException;
 import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
@@ -9,7 +10,7 @@ import sportal.model.repository.IUserRepository;
 import javax.servlet.http.HttpSession;
 
 @Component
-public class SessionManager extends AbstractController{
+public class SessionManager extends AbstractController {
 
     private static final String LOGGED_USER_ID = "LOGGED_USER_ID";
 
