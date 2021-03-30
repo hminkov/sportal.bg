@@ -152,16 +152,22 @@ public class UserService {
         }
     }
 
-    public String deleteProfile(int userId, HttpSession ses) throws SQLException {
-        Optional<User> u = userRepository.findById(userId);
+    public UserWithoutPasswordResponseDTO deleteProfile(UserDTO userDTO, User user) throws SQLException {
+        Optional<User> u = userRepository.findById(user.getId());
         if (u.isPresent()) {
-            userDao.deleteUser(userId);
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            if (encoder.matches(userDTO.getPassword(), user.getPassword())) {
+                userDao.deleteUser(user.getId());
+            }else{
+                throw new WrongCredentialsException("Passwords does not match. Try again!");
+            }
+            Optional<User> deletedUser = userRepository.findById(user.getId());
+            UserWithoutPasswordResponseDTO deletedResponse = new UserWithoutPasswordResponseDTO(deletedUser.get());
+            return deletedResponse;
         }
         else {
             throw new NotFoundException("User not found!");
         }
-        ses.invalidate();
-        return "Profile successfully deleted. Hope we will see you again soon.";
     }
 
     public UserWithoutPasswordResponseDTO changePassword(UserDTO userDTO, User userBefore){

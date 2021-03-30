@@ -32,7 +32,7 @@ public class UserDAO {
     protected JdbcTemplate jdbcTemplate;
 
     public void deleteUser(int id) throws SQLException {
-        String sql = DELETE_USER;
+        String sql = "UPDATE users SET username = 'deleted-" + id +"'" + ", password = 'deleted-" + id +"'" + ", email = 'deleted-" + id +"'" + " WHERE id = ?";
         try (Connection connection = jdbcTemplate.getDataSource().getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);

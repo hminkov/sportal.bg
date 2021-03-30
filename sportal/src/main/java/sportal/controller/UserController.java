@@ -68,13 +68,13 @@ public class UserController extends AbstractController{
     }
 
     @DeleteMapping("/users")
-    public String deleteProfile(HttpSession ses){
+    public UserWithoutPasswordResponseDTO deleteProfile(@RequestBody UserDTO userDTO, HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
         } else {
             User user = sessionManager.getLoggedUser(ses);
             try {
-                return userService.deleteProfile(user.getId(), ses);
+                return userService.deleteProfile(userDTO, user);
             } catch (SQLException e) {
                 throw new DBException("Something went wrong");
             }
