@@ -50,4 +50,11 @@ public class Validator {
             throw new BadRequestException("Username too short");
         }
     }
+
+    public static void validateText(String text){
+        String textTrimmed = text.trim();
+        if(textTrimmed.isEmpty()){
+            throw new BadRequestException("Text field can't be empty");
+        }
+    }
 }

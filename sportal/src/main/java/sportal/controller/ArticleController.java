@@ -1,6 +1,7 @@
 package sportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.*;
@@ -11,6 +12,7 @@ import sportal.util.SessionManager;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+@Component
 @RestController
 public class ArticleController extends AbstractController{
 
@@ -36,12 +38,12 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @PutMapping("/articles")
+    @GetMapping("/articles/authors")
     public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserIDResponseDTO author){
         return articleService.getArticleByAuthor(author);
     }
 
-    @PostMapping("/articles/by-name")
+    @GetMapping("/articles/by-name")
     public List<ArticleResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingDTO articleName){
         return articleService.getArticleByName(articleName.getHeading());
     }

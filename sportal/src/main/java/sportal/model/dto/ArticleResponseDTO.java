@@ -38,6 +38,9 @@ public class ArticleResponseDTO {
 
     private List<Comment> commentWithoutParents(List<Comment> allComments){
         List<Comment> orphanComments = new ArrayList<>();
+        if(allComments.size() == 0){
+            return orphanComments;
+        }
         for(Comment c : allComments){
             if(c.getParentComment() == null){
                 orphanComments.add(c);

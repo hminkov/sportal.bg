@@ -1,7 +1,6 @@
 package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
@@ -14,6 +13,7 @@ import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IUserRepository;
 import sportal.util.OptionalResultVerifier;
+import sportal.util.Validator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Component
 public class ArticleService {
 
     @Autowired
@@ -36,9 +35,8 @@ public class ArticleService {
     private OptionalResultVerifier orv;
 
     public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
-        if(requestArticle.getHeading().isEmpty() || requestArticle.getText().isEmpty()){
-            throw new BadRequestException("Articles must have a heading and a body");
-        }
+        Validator.validateText(requestArticle.getText());
+        Validator.validateText(requestArticle.getHeading());
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
         realArticle.setArticleText((requestArticle.getText()));
@@ -58,6 +56,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
+        Validator.validateText(editedArticle.getText());
         Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
         ogArticle.setArticleText(editedArticle.getText());
@@ -72,6 +71,7 @@ public class ArticleService {
     }
 
     private ArticleCategory createNewCategoryOrReturnMatching(String categoryName){
+        Validator.validateText(categoryName);
         if(categoryRepository.findByName(categoryName).isEmpty()){
             ArticleCategory newCategory = new ArticleCategory();
             newCategory.setName(categoryName);
@@ -101,24 +101,47 @@ public class ArticleService {
         articleDAO.undislikeArticle(userId, articleId);
     }
 
-    public List<ArticleHeadingResponseDTO> getAllArticles() {
+    public List<ArticleHeadingDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
-        List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
+        List<ArticleHeadingDTO> articleByHeadingDTO = new ArrayList<>();
         for(Article a : articles){
-            articleByHeadingDTO.add(new ArticleHeadingResponseDTO(a));
+            articleByHeadingDTO.add(new ArticleHeadingDTO(a));
         }
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(User authorId) {
-        List<Article> articles = articleRepository.findAll();
-        List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
-        for(Article a : articles){
-            if(a.getAuthor().getId() == authorId.getId()) {
-                articleResponseDTO.add(new ArticleResponseDTO(a));
+    public List<ArticleResponseDTO> getArticleByAuthor(UserIDResponseDTO authorRequest) {
+        User u = userRepository.findByUsername(authorRequest.getUsername());
+        if(u != null) {
+            List<Article> articles = articleRepository.findAll();
+            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+            boolean isFound = false;
+            for (Article a : articles) {
+                if (a.getAuthor().getId() == u.getId()) {
+                    articleResponseDTO.add(new ArticleResponseDTO(a));
+                    isFound = true;
+                }
             }
+            if(isFound) {
+                return articleResponseDTO;
+            }
+            throw new NotFoundException("No articles found from this author");
         }
-        return articleResponseDTO;
+        throw new NotFoundException("Author not found");
+    }
+    public List<ArticleResponseDTO> getArticleByName(String articleName) {
+        Article article = articleRepository.findByHeading(articleName);
+        if(article != null) {
+            List<Article> articles = articleRepository.findAll();
+            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+            for (Article a : articles) {
+                if (a.getHeading().equals(articleName)) {
+                    articleResponseDTO.add(new ArticleResponseDTO(a));
+                }
+            }
+            return articleResponseDTO;
+        }
+        throw new NotFoundException("Article not found");
     }
 
     public List<ArticleResponseDTO> getTopFiveMostViewed() {
@@ -130,8 +153,8 @@ public class ArticleService {
         return articleResponseDTOS;
     }
 
-    public ArticleCategoryDTO articleByCategory(String category) {
-        Optional<ArticleCategory> categoryOptional = categoryRepository.findByName(category);
+    public ArticleCategoryDTO articleByCategory(int catID) {
+        Optional<ArticleCategory> categoryOptional = categoryRepository.findById(catID);
         if(categoryOptional.isPresent()){
             return new ArticleCategoryDTO(categoryOptional.get());
         }

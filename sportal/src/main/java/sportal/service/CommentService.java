@@ -13,6 +13,7 @@ import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICommentRepository;
 import sportal.util.OptionalResultVerifier;
+import sportal.util.Validator;
 
 import java.time.LocalDateTime;
 
@@ -29,6 +30,7 @@ public class CommentService {
     CommentDAO commentDAO;
 
     public ArticleResponseDTO addComment(User loggedUser, AddCommentRequestDTO addedComment) {
+        Validator.validateText(addedComment.getText());
         Article article = orv.verifyOptionalResult(articleRepository.findById(addedComment.getArticleId()));
         Comment comment = new Comment(addedComment.getText(), LocalDateTime.now(), article, loggedUser);
         commentRepository.save(comment);
@@ -63,6 +65,7 @@ public class CommentService {
     }
 
     public ArticleResponseDTO editComment(EditCommentRequestDTO editedComment) {
+        Validator.validateText(editedComment.getText());
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(editedComment.getId()));
         comment.setCommentText(editedComment.getText());
         commentRepository.save(comment);
@@ -70,6 +73,7 @@ public class CommentService {
     }
 
     public ArticleResponseDTO addCommentReply(User loggedUser, addCommentReplyRequestDTO reply) {
+        Validator.validateText(reply.getText());
         Article article = orv.verifyOptionalResult(articleRepository.findById(reply.getArticleId()));
         Comment parent = orv.verifyOptionalResult(commentRepository.findById(reply.getParentCommentId()));
         Comment comment = new Comment(reply.getText(), LocalDateTime.now(), article, loggedUser, parent);

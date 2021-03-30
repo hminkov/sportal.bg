@@ -60,15 +60,6 @@ public class UserController extends AbstractController{
         }
     }
 
-//    @PutMapping("/users")
-//    public String editProfile(@RequestBody UserDTO userDTO, @PathVariable int id){
-//        if (sessionManager.getLoggedUser(ses) == null) {
-//            throw new AuthenticationException("You have to be logged in!");
-//        } else {
-//            return userService.editProfile(userDTO, id);
-//        }
-//    }
-
     @DeleteMapping("/users")
     public String deleteProfile(HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
