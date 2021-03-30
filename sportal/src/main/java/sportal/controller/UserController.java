@@ -30,19 +30,19 @@ public class UserController extends AbstractController{
 
     @PostMapping("/users/register")
     public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
-        User user =  sessionManager.getLoggedUser(ses);
-        if(user != null){
-            throw new BadRequestException("Trying to register while already logged");
-        }
+//        User user =  sessionManager.getLoggedUser(ses);
+//        if(user != null){
+//            throw new BadRequestException("Trying to register while already logged");
+//        }
         return userService.registerUser(userDTO);
     }
 
     @PostMapping("/users/login")
     public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
-        User user =  sessionManager.getLoggedUser(ses);
-        if(user != null){
-            throw new BadRequestException("Trying to register while already logged");
-        }
+//        User user =  sessionManager.getLoggedUser(ses);
+//        if(user != null){
+//            throw new BadRequestException("Trying to register while already logged");
+//        }
         LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
         sessionManager.loginUser(ses, responseDto.getId());
         return responseDto;
@@ -62,7 +62,7 @@ public class UserController extends AbstractController{
         }
     }
 
-//    @PutMapping("/users/{id}/edit")
+//    @PutMapping("/users/{id}")
 //    public String editProfile(@RequestBody UserDTO userDTO, @PathVariable int id){
 //        if (sessionManager.getLoggedUser(ses) == null) {
 //            throw new AuthenticationException("You have to be logged in!");
@@ -71,7 +71,7 @@ public class UserController extends AbstractController{
 //        }
 //    }
 
-    @PutMapping("/users/delete")
+    @DeleteMapping("/users")
     public String deleteProfile(HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
