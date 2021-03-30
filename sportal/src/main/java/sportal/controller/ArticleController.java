@@ -42,8 +42,8 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/users/{username}/article")
-    public List<ArticleResponseDTO> getArticleByAuthor(@PathVariable String username){
+    @GetMapping("/users/{username}/articles")
+    public List<ArticleResponseDTO> getArticlesByAuthor(@PathVariable String username){
         return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
     }
 
@@ -53,7 +53,7 @@ public class ArticleController extends AbstractController{
     }
 
     @GetMapping("/articles/{category}")
-    public ArticleCategoryDTO getArticleByCategory(@PathVariable String category){
+    public ArticleCategoryDTO getArticlesByCategory(@PathVariable String category){
         return articleService.articleByCategory(category);
     }
 

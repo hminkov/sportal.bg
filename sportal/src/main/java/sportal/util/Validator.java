@@ -40,4 +40,14 @@ public class Validator {
             throw new BadRequestException("Entered passwords must match!");
         }
     }
+
+    public static void validateUsername(String username){
+        username = username.trim();
+        if(username.isEmpty()){
+            throw new BadRequestException("Username cannot be empty");
+        }
+        if(username.length() < 3){
+            throw new BadRequestException("Username too short");
+        }
+    }
 }

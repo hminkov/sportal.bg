@@ -96,5 +96,4 @@ public class UserController extends AbstractController{
     public boolean userIsAdmin(User user){
         return userService.userIsAdmin(user);
     }
-
 }

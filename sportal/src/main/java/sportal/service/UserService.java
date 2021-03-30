@@ -17,6 +17,7 @@ import sportal.exceptions.WrongCredentialsException;
 import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
+import sportal.util.EmailService;
 import sportal.util.Validator;
 
 import javax.servlet.http.HttpSession;
@@ -32,6 +33,8 @@ public class UserService {
     IUserRepository userRepository;
     @Autowired
     UserDAO userDao;
+    @Autowired
+    private EmailService emailService;
 
 
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
@@ -41,6 +44,8 @@ public class UserService {
         if(userRepository.findByEmail(userDTO.getEmail()) != null){
             throw new BadRequestException("Email already exists");
         }
+        //check if username is empty or too short
+        Validator.validateUsername(userDTO.getUsername());
         //check if username exists
         if(userRepository.findByUsername(userDTO.getUsername()) != null){
             throw new BadRequestException("Username already exists");
@@ -53,12 +58,13 @@ public class UserService {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
         } else {
-            throw new BadRequestException("The passwords does not match!");
+            throw new BadRequestException("The passwords do not match!");
         }
         //save new user to DB by userRepository
         User user = new User(userDTO);
         user = userRepository.save(user);
         RegisterResponseUserDTO responseUserDTO = new RegisterResponseUserDTO(user);
+        emailService.sendConfirmationEmail(user);
         return responseUserDTO;
     }
 
