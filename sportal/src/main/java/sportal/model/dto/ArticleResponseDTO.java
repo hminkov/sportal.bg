@@ -19,14 +19,14 @@ public class ArticleResponseDTO {
     private String heading;
     private String text;
     private int views;
-    private UserIDResponseDTO author;
+    private UserWithoutPasswordResponseDTO author;
     private ArticleCategory category;
     private List<Comment> comments;
     private int[] imageIds;
 
     public ArticleResponseDTO(Article article){
         id = article.getId();
-        author = new UserIDResponseDTO(article.getAuthor());
+        author = new UserWithoutPasswordResponseDTO(article.getAuthor());
         heading = article.getHeading();
         text = article.getArticleText();
         category = article.getCategory();
