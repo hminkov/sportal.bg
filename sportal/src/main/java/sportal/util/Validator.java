@@ -1,13 +1,12 @@
 package sportal.util;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
+import sportal.controller.UserController;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.UserDTO;
 import sportal.model.pojo.User;
-import sportal.model.repository.IUserRepository;
 
 public class Validator {
+
     private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
 

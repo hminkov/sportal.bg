@@ -8,6 +8,7 @@ import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.util.SessionManager;
+import sportal.util.Validator;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -106,8 +107,7 @@ public class ArticleController extends AbstractController{
         User loggedUser = sessionManager.getLoggedUser(ses);
         articleService.undislikeArticle(loggedUser.getId(), articleId);
     }
-
-    private boolean isAdmin(User user){
+    public boolean isAdmin(User user){
         return userController.userIsAdmin(user);
     }
 }

@@ -7,5 +7,5 @@ import sportal.model.pojo.ArticleImage;
 
 @Repository
 @Component
-public interface IArticleImageRepository extends JpaRepository<ArticleImage, Integer> {
+public interface IImageRepository extends JpaRepository<ArticleImage, Integer> {
 }

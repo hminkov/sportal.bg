@@ -28,6 +28,9 @@ public class Article extends POJO{
     private User author;
     @OneToMany(mappedBy = "article")
     private List<Comment> comments;
+    @OneToMany(mappedBy = "article")
+    @JsonManagedReference
+    private List<ArticleImage> articleImages;
     @JsonManagedReference
     @ManyToOne
     @JoinColumn(name = "category_id")
