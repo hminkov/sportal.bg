@@ -2,7 +2,6 @@ package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
 import sportal.model.dao.ArticleDAO;
 import sportal.model.dto.*;
@@ -110,7 +109,7 @@ public class ArticleService {
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(UserIDResponseDTO authorRequest) {
+    public List<ArticleResponseDTO> getArticleByAuthor(UserWithoutPasswordResponseDTO authorRequest) {
         User u = userRepository.findByUsername(authorRequest.getUsername());
         if(u != null) {
             List<Article> articles = articleRepository.findAll();

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.ArticleCategory;
 import sportal.model.pojo.Comment;
-import sportal.model.pojo.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +21,13 @@ public class ArticleResponseDTO {
     private String heading;
     private String text;
     private int views;
-    private UserIDResponseDTO author;
+    private UserWithoutPasswordResponseDTO author;
     private ArticleCategory category;
     private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){
         id = article.getId();
-        author = new UserIDResponseDTO(article.getAuthor());
+        author = new UserWithoutPasswordResponseDTO(article.getAuthor());
         heading = article.getHeading();
         text = article.getArticleText();
         category = article.getCategory();

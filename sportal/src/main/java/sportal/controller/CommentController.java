@@ -3,7 +3,7 @@ package sportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.AddCommentRequestDTO;
+import sportal.model.dto.AddCommentReplyRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.*;
 import sportal.model.pojo.User;
@@ -26,13 +26,13 @@ public class CommentController extends AbstractController{
     UserController userController;
 
     @PostMapping("comments")
-    public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
+    public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentReplyRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addComment(loggedUser, comment);
     }
 
     @PostMapping("comments/{parentId}")
-    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody АddCommentReplyRequestDTO reply){
+    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody AddCommentReplyRequestDTO reply){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addCommentReply(loggedUser, reply);
     }

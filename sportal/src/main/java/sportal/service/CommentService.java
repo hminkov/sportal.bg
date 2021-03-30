@@ -3,10 +3,9 @@ package sportal.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sportal.model.dao.CommentDAO;
-import sportal.model.dto.AddCommentRequestDTO;
+import sportal.model.dto.AddCommentReplyRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditCommentRequestDTO;
-import sportal.model.dto.addCommentReplyRequestDTO;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
@@ -28,7 +27,7 @@ public class CommentService {
     @Autowired
     CommentDAO commentDAO;
 
-    public ArticleResponseDTO addComment(User loggedUser, AddCommentRequestDTO addedComment) {
+    public ArticleResponseDTO addComment(User loggedUser, AddCommentReplyRequestDTO addedComment) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(addedComment.getArticleId()));
         Comment comment = new Comment(addedComment.getText(), LocalDateTime.now(), article, loggedUser);
         commentRepository.save(comment);
@@ -69,7 +68,7 @@ public class CommentService {
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(editedComment.getArticleId())));
     }
 
-    public ArticleResponseDTO addCommentReply(User loggedUser, addCommentReplyRequestDTO reply) {
+    public ArticleResponseDTO addCommentReply(User loggedUser, AddCommentReplyRequestDTO reply) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(reply.getArticleId()));
         Comment parent = orv.verifyOptionalResult(commentRepository.findById(reply.getParentCommentId()));
         Comment comment = new Comment(reply.getText(), LocalDateTime.now(), article, loggedUser, parent);

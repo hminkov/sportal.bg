@@ -78,11 +78,11 @@ public class UserService {
         }
     }
 
-    public List<UserIDResponseDTO> getAllUsers() {
+    public List<UserWithoutPasswordResponseDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
-        List<UserIDResponseDTO> userIDResponseDTO = new ArrayList<>();
+        List<UserWithoutPasswordResponseDTO> userIDResponseDTO = new ArrayList<>();
         for(User u : users){
-            userIDResponseDTO.add(new UserIDResponseDTO(u));
+            userIDResponseDTO.add(new UserWithoutPasswordResponseDTO(u));
         }
         return userIDResponseDTO;
     }
@@ -103,25 +103,54 @@ public class UserService {
         }
     }
 
-//    public String editProfile(UserDTO userDTO, int id){
-//        Optional<User> u = userRepository.findById(id);
-//        if (u.isPresent()) {
-//            User user = u.get();
-//            PasswordEncoder encoder = new BCryptPasswordEncoder();
-//            if (encoder.matches(userDTO.getPassword(), user.getPassword())) {
-//                //check if email format is correct
-//                //validate if email already exists
-//                user.setEmail();
-//                //validate if username already exists
-//                user.setUsername(u);
-//                Validator.changePassword(userDTO, user, userRepository);
-//            } else {
-//                throw new WrongCredentialsException("Passwords does not match. Try again!");
-//            }
-//        } else {
-//            throw new NotFoundException("User not found");
-//        }
-//    }
+
+    public UserWithoutPasswordResponseDTO editProfile(UserDTO userDTO, User userBefore) {
+        Optional<User> u = userRepository.findById(userBefore.getId());
+        if (u.isPresent()) {
+            User userUpdate = u.get();
+            PasswordEncoder encoder = new BCryptPasswordEncoder();
+            if (encoder.matches(userDTO.getPassword(), userBefore.getPassword())) {
+                //validate if username or email already exists
+                List<User> users = userRepository.findAll();
+                for(User user : users){
+                    if(user.getEmail().equals(userDTO.getEmail())){
+                        throw new BadRequestException("Email already exists");
+                    }
+                    if(user.getUsername().equals(userDTO.getUsername())){
+                        throw new BadRequestException("Username already exists");
+                    }
+                }
+                //check if email format is correct or if such email exists
+                if(userDTO.getEmail() != null) {
+                    Validator.emailFormatValidator(userDTO.getEmail());
+                    userUpdate.setEmail(userDTO.getEmail());
+                }
+                //check if username format is correct
+                if(userDTO.getUsername() != null) {
+                    Validator.validateUsername(userDTO.getUsername());
+                    userUpdate.setUsername(userDTO.getUsername());
+                }
+                //validate password format and change
+                if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
+                    if(!userDTO.getNewPassword().equals(userBefore.getPassword())) {
+                        Validator.passwordFormatValidator(userDTO.getNewPassword());
+                        userUpdate.setPassword(encoder.encode(userDTO.getNewPassword()));
+                    }else{
+                        throw new BadRequestException("Your new password should not be the same as the old one! Try again");
+                    }
+                } else {
+                    throw new BadRequestException("Entered passwords must match!");
+                }
+                UserWithoutPasswordResponseDTO currentUser = new UserWithoutPasswordResponseDTO(userUpdate);
+                userRepository.save(userUpdate);
+                return currentUser;
+            } else {
+                throw new WrongCredentialsException("Passwords does not match. Try again!");
+            }
+        } else {
+            throw new WrongCredentialsException("Bad credentials. Try again!");
+        }
+    }
 
     public String deleteProfile(int userId, HttpSession ses) throws SQLException {
         Optional<User> u = userRepository.findById(userId);
@@ -135,13 +164,25 @@ public class UserService {
         return "Profile successfully deleted. Hope we will see you again soon.";
     }
 
-    public String changePassword(UserDTO userDTO, int userId){
-        Optional<User> u = userRepository.findById(userId);
+    public UserWithoutPasswordResponseDTO changePassword(UserDTO userDTO, User userBefore){
+        Optional<User> u = userRepository.findById(userBefore.getId());
         if (u.isPresent()) {
-            User user = u.get();
+            User userUpdate = u.get();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
-            if (encoder.matches(userDTO.getPassword(), user.getPassword())) {
-                return Validator.changePassword(userDTO, user, userRepository);
+            if (encoder.matches(userDTO.getPassword(), userUpdate.getPassword())) {
+                if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
+                    if(!userDTO.getNewPassword().equals(userUpdate.getPassword())) {
+                        Validator.passwordFormatValidator(userDTO.getNewPassword());
+                        userUpdate.setPassword(encoder.encode(userDTO.getNewPassword()));
+                        UserWithoutPasswordResponseDTO currentUser = new UserWithoutPasswordResponseDTO(userUpdate);
+                        userRepository.save(userUpdate);
+                        return currentUser;
+                    }else{
+                        throw new BadRequestException("Your new password should not be the same as the old one! Try again");
+                    }
+                } else {
+                    throw new BadRequestException("Entered passwords must match!");
+                }
             } else {
                 throw new WrongCredentialsException("Passwords does not match. Try again!");
             }
@@ -150,7 +191,8 @@ public class UserService {
         }
     }
 
-    public boolean userIsAdmin(User user) {
-        return userDao.userIsAdmin(user);
+    public boolean userIsAdmin(User userBefore) {
+        return userDao.userIsAdmin(userBefore);
     }
+
 }

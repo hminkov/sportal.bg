@@ -10,13 +10,14 @@ import sportal.model.pojo.User;
 @Setter
 @Getter
 @Component
-public class UserIDResponseDTO {
+public class UserWithoutPasswordResponseDTO {
 
     private int id;
     private String username;
     private String email;
+    private String msg = "Edit successful";
 
-    public UserIDResponseDTO(User u){
+    public UserWithoutPasswordResponseDTO(User u){
         id = u.getId();
         username = u.getUsername();
         email = u.getEmail();

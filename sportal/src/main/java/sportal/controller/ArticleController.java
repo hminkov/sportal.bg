@@ -38,12 +38,12 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/articles/authors")
-    public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserIDResponseDTO author){
+    @PutMapping("/articles/authors")
+    public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserWithoutPasswordResponseDTO author){
         return articleService.getArticleByAuthor(author);
     }
 
-    @GetMapping("/articles/by-name")
+    @PutMapping("/articles/by-name")
     public List<ArticleResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingDTO articleName){
         return articleService.getArticleByName(articleName.getHeading());
     }
