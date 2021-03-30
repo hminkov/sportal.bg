@@ -6,7 +6,7 @@ import sportal.model.dao.CommentDAO;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditCommentRequestDTO;
-import sportal.model.dto.addCommentReplyRequestDTO;
+import sportal.model.dto.АddCommentReplyRequestDTO;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
@@ -69,7 +69,7 @@ public class CommentService {
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(editedComment.getArticleId())));
     }
 
-    public ArticleResponseDTO addCommentReply(User loggedUser, addCommentReplyRequestDTO reply) {
+    public ArticleResponseDTO addCommentReply(User loggedUser, АddCommentReplyRequestDTO reply) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(reply.getArticleId()));
         Comment parent = orv.verifyOptionalResult(commentRepository.findById(reply.getParentCommentId()));
         Comment comment = new Comment(reply.getText(), LocalDateTime.now(), article, loggedUser, parent);

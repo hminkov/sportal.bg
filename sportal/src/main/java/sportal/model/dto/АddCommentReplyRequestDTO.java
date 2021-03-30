@@ -7,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class addCommentReplyRequestDTO {
+public class АddCommentReplyRequestDTO {
 
     private int parentCommentId;
     private int articleId;

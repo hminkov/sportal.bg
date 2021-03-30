@@ -8,14 +8,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import sportal.exceptions.BadRequestException;
+import sportal.model.dto.UserDTO;
 import sportal.model.pojo.Article;
+import sportal.model.pojo.ArticleCategory;
+import sportal.model.pojo.User;
+import sportal.model.repository.IUserRepository;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @NoArgsConstructor
@@ -35,11 +37,14 @@ public class ArticleDAO {
             "SELECT id, heading, article_text, views " +
                     "FROM articles " +
                     "ORDER BY views DESC LIMIT 5;";
+    private final String SEARCH_FOR_HEADING = "SELECT * FROM articles WHERE heading LIKE (?);";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private LikeAndDislikeDAO likeAndDislikeDAO;
+    @Autowired
+    private IUserRepository iUserRepository;
 
     public void likeArticle(int userId, int articleId) {
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_LIKES_QUERY)){
@@ -97,6 +102,17 @@ public class ArticleDAO {
             topFiveArticles.add(this.packArticle(rowSet));
         }
         return topFiveArticles;
+    }
+
+    public List<Article> getArticleByHeading(String articleHeading){
+        SqlRowSet rowSet = jdbcTemplate.queryForRowSet("SELECT * FROM articles WHERE heading LIKE '%" + articleHeading + "%'");
+        List<Article> articlesByHeading = new ArrayList<>();
+        while (rowSet.next()) {
+            Article article = new Article();
+            article.setId(rowSet.getInt("id"));
+            articlesByHeading.add(article);
+        }
+        return articlesByHeading;
     }
 
 

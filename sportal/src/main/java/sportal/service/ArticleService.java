@@ -127,19 +127,18 @@ public class ArticleService {
         }
         throw new NotFoundException("Author not found");
     }
-    public List<ArticleResponseDTO> getArticleByName(String articleName) {
-        Article article = articleRepository.findByHeading(articleName);
-        if(article != null) {
-            List<Article> articles = articleRepository.findAll();
+    public List<ArticleResponseDTO> getArticleByName(String articleName){
+        List<Article> articles = articleDAO.getArticleByHeading(articleName);
+        System.out.println("Article size - " + articles.size());
+        if(articles.size() > 0) {
             List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
             for (Article a : articles) {
-                if (a.getHeading().equals(articleName)) {
-                    articleResponseDTO.add(new ArticleResponseDTO(a));
-                }
+                Optional<Article> articleById = articleRepository.findById(a.getId());
+                articleById.ifPresent(article -> articleResponseDTO.add(new ArticleResponseDTO(article)));
             }
             return articleResponseDTO;
         }
-        throw new NotFoundException("Article not found");
+        throw new NotFoundException("Article with such title not found");
     }
 
     public List<ArticleResponseDTO> getTopFiveMostViewed() {

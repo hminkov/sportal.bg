@@ -9,6 +9,7 @@ import sportal.service.ArticleService;
 import sportal.util.SessionManager;
 
 import javax.servlet.http.HttpSession;
+import java.sql.SQLException;
 import java.util.List;
 
 @RestController

@@ -32,7 +32,7 @@ public class CommentController extends AbstractController{
     }
 
     @PostMapping("comments/{parentId}")
-    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody addCommentReplyRequestDTO reply){
+    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody АddCommentReplyRequestDTO reply){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addCommentReply(loggedUser, reply);
     }
