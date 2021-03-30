@@ -42,19 +42,19 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/users/{username}/article")
-    public List<ArticleResponseDTO> getArticleByAuthor(@PathVariable String username){
-        return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
-    }
-
-    @GetMapping("/articles/top5")
-    public List<ArticleResponseDTO> topFiveMostViewedArticles(){
-        return articleService.getTopFiveMostViewed();
+    @PostMapping("/articles/byauthor")
+    public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserIDResponseDTO author){
+        return articleService.getArticleByAuthor(iUserRepository.findByUsername(author.getUsername()));
     }
 
     @GetMapping("/categories/{id}")
     public ArticleCategoryDTO getArticleByCategory(@PathVariable int id){
         return articleService.articleByCategory(id);
+    }
+
+    @GetMapping("/articles/top5")
+    public List<ArticleResponseDTO> topFiveMostViewedArticles(){
+        return articleService.getTopFiveMostViewed();
     }
 
     @GetMapping("/articles")
