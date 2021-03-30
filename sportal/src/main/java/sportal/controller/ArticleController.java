@@ -52,9 +52,9 @@ public class ArticleController extends AbstractController{
         return articleService.getTopFiveMostViewed();
     }
 
-    @GetMapping("/articles/{category}")
-    public ArticleCategoryDTO getArticleByCategory(@PathVariable String category){
-        return articleService.articleByCategory(category);
+    @GetMapping("/categories/{id}")
+    public ArticleCategoryDTO getArticleByCategory(@PathVariable int id){
+        return articleService.articleByCategory(id);
     }
 
     @GetMapping("/articles")

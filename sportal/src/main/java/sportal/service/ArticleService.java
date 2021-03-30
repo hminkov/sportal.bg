@@ -110,11 +110,11 @@ public class ArticleService {
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(User authorId) {
+    public List<ArticleResponseDTO> getArticleByAuthor(User authorID) {
         List<Article> articles = articleRepository.findAll();
         List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
         for(Article a : articles){
-            if(a.getAuthor().getId() == authorId.getId()) {
+            if(a.getAuthor().getId() == authorID.getId()) {
                 articleResponseDTO.add(new ArticleResponseDTO(a));
             }
         }
@@ -130,8 +130,8 @@ public class ArticleService {
         return articleResponseDTOS;
     }
 
-    public ArticleCategoryDTO articleByCategory(String category) {
-        Optional<ArticleCategory> categoryOptional = categoryRepository.findByName(category);
+    public ArticleCategoryDTO articleByCategory(int catID) {
+        Optional<ArticleCategory> categoryOptional = categoryRepository.findById(catID);
         if(categoryOptional.isPresent()){
             return new ArticleCategoryDTO(categoryOptional.get());
         }
