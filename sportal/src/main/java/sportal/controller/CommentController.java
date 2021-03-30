@@ -3,10 +3,7 @@ package sportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.AddCommentRequestDTO;
-import sportal.model.dto.ArticleResponseDTO;
-import sportal.model.dto.EditCommentRequestDTO;
-import sportal.model.dto.addCommentReplyRequestDTO;
+import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.service.CommentService;
@@ -38,11 +35,11 @@ public class CommentController extends AbstractController{
         return commentService.addCommentReply(loggedUser, reply);
     }
 
-    @DeleteMapping("/comments/{commentId}")
-    public ArticleResponseDTO deleteComment(HttpSession ses, @PathVariable int commentId){
+    @DeleteMapping("/comments")
+    public ArticleResponseDTO deleteComment(HttpSession ses, @RequestBody DeleteCommentRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), commentId)){
-            return commentService.deleteComment(commentId);
+        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), comment.getCommentId())){
+            return commentService.deleteComment(comment.getCommentId());
         }
         else{
             throw new BadRequestException("You can only delete your own comments");

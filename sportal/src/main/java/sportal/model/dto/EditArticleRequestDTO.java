@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class EditArticleRequestDTO {
 
+    private int articleId;
     private String heading;
     private String text;
     private String category;

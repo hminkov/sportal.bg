@@ -28,7 +28,7 @@ public class UserController extends AbstractController{
     @Autowired
     private SessionManager sessionManager;
 
-    @PostMapping("/users/register")
+    @PostMapping("/users")
     public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
         if(sessionManager.userAlreadyLogged(ses)){
             throw new BadRequestException("Trying to register while already logged");
@@ -60,7 +60,7 @@ public class UserController extends AbstractController{
         }
     }
 
-//    @PutMapping("/users/{id}/edit")
+//    @PutMapping("/users")
 //    public String editProfile(@RequestBody UserDTO userDTO, @PathVariable int id){
 //        if (sessionManager.getLoggedUser(ses) == null) {
 //            throw new AuthenticationException("You have to be logged in!");
@@ -69,7 +69,7 @@ public class UserController extends AbstractController{
 //        }
 //    }
 
-    @PutMapping("/users/delete")
+    @DeleteMapping("/users")
     public String deleteProfile(HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
