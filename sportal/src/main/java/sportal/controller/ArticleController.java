@@ -54,7 +54,7 @@ public class ArticleController extends AbstractController{
     }
 
     @GetMapping("/articles/top5")
-    public List<ArticleResponseDTO> topFiveMostViewedArticles(){
+    public List<ArticleResponseWithoutComDTO> topFiveMostViewedArticles(){
         return articleService.getTopFiveMostViewed();
     }
 

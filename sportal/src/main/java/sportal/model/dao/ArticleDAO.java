@@ -86,20 +86,13 @@ public class ArticleDAO {
         }
     }
 
-    private Article packArticle(SqlRowSet rowSet) {
-        Article article = new Article();
-        article.setId(rowSet.getInt("id"));
-        article.setHeading(rowSet.getString("heading"));
-        article.setArticleText(rowSet.getString("article_text"));
-        article.setViews(rowSet.getInt("views"));
-        return article;
-    }
-
     public List<Article> topFiveMostViewedArticles(){
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet(TOP_FIVE_ARTICLES);
         List<Article> topFiveArticles = new ArrayList<>();
         while (rowSet.next()) {
-            topFiveArticles.add(this.packArticle(rowSet));
+            Article article = new Article();
+            article.setId(rowSet.getInt("id"));
+            topFiveArticles.add(article);
         }
         return topFiveArticles;
     }

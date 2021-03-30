@@ -130,7 +130,6 @@ public class ArticleService {
     }
     public List<ArticleResponseDTO> getArticleByName(String articleName){
         List<Article> articles = articleDAO.getArticleByHeading(articleName);
-        System.out.println("Article size - " + articles.size());
         if(articles.size() > 0) {
             List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
             for (Article a : articles) {
@@ -142,13 +141,17 @@ public class ArticleService {
         throw new NotFoundException("Article with such title not found");
     }
 
-    public List<ArticleResponseDTO> getTopFiveMostViewed() {
-        List<ArticleResponseDTO> articleResponseDTOS = new ArrayList<>();
+    public List<ArticleResponseWithoutComDTO> getTopFiveMostViewed() {
         List<Article> articles = articleDAO.topFiveMostViewedArticles();
-        for(Article a : articles){
-            articleResponseDTOS.add(new ArticleResponseDTO(a));
+        if(articles.size() > 0) {
+            List<ArticleResponseWithoutComDTO> articleResponseWithoutComDTO = new ArrayList<>();
+            for (Article a : articles) {
+                Optional<Article> articleById = articleRepository.findById(a.getId());
+                articleById.ifPresent(article -> articleResponseWithoutComDTO.add(new ArticleResponseWithoutComDTO(article)));
+            }
+            return articleResponseWithoutComDTO;
         }
-        return articleResponseDTOS;
+        throw new NotFoundException("No articles found");
     }
 
     public ArticleCategoryDTO articleByCategory(int catID) {
