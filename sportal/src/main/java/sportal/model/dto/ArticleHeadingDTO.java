@@ -12,9 +12,13 @@ import sportal.model.pojo.Article;
 @Component
 public class ArticleHeadingDTO {
 
+    private int id;
     private String heading;
+    private String text;
 
     public ArticleHeadingDTO(Article article){
+        this.id = article.getId();
         this.heading = article.getHeading();
+        this.text = article.getArticleText();
     }
 }

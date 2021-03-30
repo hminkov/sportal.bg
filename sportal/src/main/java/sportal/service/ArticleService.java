@@ -2,7 +2,6 @@ package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
 import sportal.model.dao.ArticleDAO;
 import sportal.model.dto.*;
@@ -45,7 +44,6 @@ public class ArticleService {
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
         realArticle.setArticleText((requestArticle.getText()));
-        User user = orv.verifyOptionalResult(userRepository.findById(author.getId()));
         realArticle.setAuthor(author);
         realArticle.setCategory(createNewCategoryOrReturnMatching(requestArticle.getCategory()));
         realArticle.setPostDate(LocalDateTime.now());
@@ -127,7 +125,7 @@ public class ArticleService {
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(UserIDResponseDTO authorRequest) {
+    public List<ArticleResponseDTO> getArticleByAuthor(UserWithoutPasswordResponseDTO authorRequest) {
         User u = userRepository.findByUsername(authorRequest.getUsername());
         if(u != null) {
             List<Article> articles = articleRepository.findAll();
@@ -146,28 +144,31 @@ public class ArticleService {
         }
         throw new NotFoundException("Author not found");
     }
-    public List<ArticleResponseDTO> getArticleByName(String articleName) {
-        Article article = articleRepository.findByHeading(articleName);
-        if(article != null) {
-            List<Article> articles = articleRepository.findAll();
+
+    public List<ArticleResponseDTO> getArticleByName(String articleName){
+        List<Article> articles = articleDAO.getArticleByHeading(articleName);
+        if(articles.size() > 0) {
             List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
             for (Article a : articles) {
-                if (a.getHeading().equals(articleName)) {
-                    articleResponseDTO.add(new ArticleResponseDTO(a));
-                }
+                Optional<Article> articleById = articleRepository.findById(a.getId());
+                articleById.ifPresent(article -> articleResponseDTO.add(new ArticleResponseDTO(article)));
             }
             return articleResponseDTO;
         }
-        throw new NotFoundException("Article not found");
+        throw new NotFoundException("Article with such title not found");
     }
 
-    public List<ArticleResponseDTO> getTopFiveMostViewed() {
-        List<ArticleResponseDTO> articleResponseDTOS = new ArrayList<>();
+    public List<ArticleResponseWithoutComDTO> getTopFiveMostViewed() {
         List<Article> articles = articleDAO.topFiveMostViewedArticles();
-        for(Article a : articles){
-            articleResponseDTOS.add(new ArticleResponseDTO(a));
+        if(articles.size() > 0) {
+            List<ArticleResponseWithoutComDTO> articleResponseWithoutComDTO = new ArrayList<>();
+            for (Article a : articles) {
+                Optional<Article> articleById = articleRepository.findById(a.getId());
+                articleById.ifPresent(article -> articleResponseWithoutComDTO.add(new ArticleResponseWithoutComDTO(article)));
+            }
+            return articleResponseWithoutComDTO;
         }
-        return articleResponseDTOS;
+        throw new NotFoundException("No articles found");
     }
 
     public ArticleCategoryDTO articleByCategory(int catID) {

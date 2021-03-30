@@ -25,22 +25,6 @@ public class Validator {
         }
     }
 
-    public static String changePassword(UserDTO userDTO, User user, IUserRepository userRepository){
-        PasswordEncoder encoder = new BCryptPasswordEncoder();
-        if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
-            if(!userDTO.getNewPassword().equals(user.getPassword())) {
-                passwordFormatValidator(userDTO.getNewPassword());
-                user.setPassword(encoder.encode(userDTO.getNewPassword()));
-                userRepository.save(user);
-                return "Password changed";
-            }else{
-                return "Your new password should not be the same as the old one! Try again";
-            }
-        } else {
-            throw new BadRequestException("Entered passwords must match!");
-        }
-    }
-
     public static void validateUsername(String username){
         username = username.trim();
         if(username.isEmpty()){

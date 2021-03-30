@@ -51,23 +51,30 @@ public class UserController extends AbstractController{
         return sessionManager.logoutUser(ses);
     }
 
-    @PutMapping("/users/{id}/password/change")
-    public String changePassword(@RequestBody UserDTO userDTO, @PathVariable int id, HttpSession ses){
+    @PutMapping("/users/edit")
+    public UserWithoutPasswordResponseDTO editUser(@RequestBody UserDTO requestDto, HttpSession session){
+        User user = sessionManager.getLoggedUser(session);
+        return userService.editProfile(requestDto,user);
+    }
+
+    @PutMapping("/users")
+    public UserWithoutPasswordResponseDTO changePassword(@RequestBody UserDTO requestDto, HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
         } else {
-            return userService.changePassword(userDTO, id);
+            User user = sessionManager.getLoggedUser(ses);
+            return userService.changePassword(requestDto, user);
         }
     }
 
     @DeleteMapping("/users")
-    public String deleteProfile(HttpSession ses){
+    public UserWithoutPasswordResponseDTO deleteProfile(@RequestBody UserDTO userDTO, HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
         } else {
             User user = sessionManager.getLoggedUser(ses);
             try {
-                return userService.deleteProfile(user.getId(), ses);
+                return userService.deleteProfile(userDTO, user);
             } catch (SQLException e) {
                 throw new DBException("Something went wrong");
             }
@@ -80,7 +87,7 @@ public class UserController extends AbstractController{
     }
 
     @GetMapping("/users")
-    public List<UserIDResponseDTO> getAllUsers(){
+    public List<UserWithoutPasswordResponseDTO> getAllUsers(){
         return userService.getAllUsers();
     }
 
