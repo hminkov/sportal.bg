@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
+
 @Getter
 @Setter
 @Entity
@@ -32,4 +33,11 @@ public class Article extends POJO{
     @ManyToOne
     @JoinColumn(name = "category_id")
     private ArticleCategory category;
+    @OneToMany(mappedBy = "article")
+    private List<ArticleImage> images;
+
+    public Article(){
+        comments = new ArrayList<>();
+        images = new ArrayList<>();
+    }
 }

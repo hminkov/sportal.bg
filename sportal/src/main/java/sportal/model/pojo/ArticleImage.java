@@ -1,6 +1,7 @@
 package sportal.model.pojo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,7 +17,8 @@ import javax.persistence.*;
 @Table(name = "article_images")
 public class ArticleImage extends POJO{
 
-    private String url;
+    @JsonIgnore
+    private String imgUrl;
     @ManyToOne
     @JoinColumn(name = "article_id")
     @JsonBackReference

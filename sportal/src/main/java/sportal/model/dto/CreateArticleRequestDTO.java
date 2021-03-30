@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class CreateArticleRequestDTO {
 
-    private int creatorId;
     private String category;
     private String heading;
     private String text;
+    private int[] imageIds;
 }
