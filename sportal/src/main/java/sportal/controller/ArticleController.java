@@ -5,8 +5,6 @@ import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.*;
 import sportal.model.pojo.User;
-import sportal.model.repository.ICategoryRepository;
-import sportal.model.repository.IUserRepository;
 import sportal.service.ArticleService;
 import sportal.util.SessionManager;
 
@@ -16,10 +14,6 @@ import java.util.List;
 @RestController
 public class ArticleController extends AbstractController{
 
-    @Autowired
-    IUserRepository iUserRepository;
-    @Autowired
-    ICategoryRepository iCategoryRepository;
     @Autowired
     ArticleService articleService;
     @Autowired
@@ -42,9 +36,19 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/users/{username}/articles")
-    public List<ArticleResponseDTO> getArticlesByAuthor(@PathVariable String username){
-        return articleService.getArticleByAuthor(iUserRepository.findByUsername(username));
+    @PutMapping("/articles")
+    public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserIDResponseDTO author){
+        return articleService.getArticleByAuthor(author);
+    }
+
+    @PostMapping("/articles/by-name")
+    public List<ArticleResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingDTO articleName){
+        return articleService.getArticleByName(articleName.getHeading());
+    }
+
+    @GetMapping("/categories/{id}")
+    public ArticleCategoryDTO getArticleByCategory(@PathVariable int id){
+        return articleService.articleByCategory(id);
     }
 
     @GetMapping("/articles/top5")
@@ -52,13 +56,8 @@ public class ArticleController extends AbstractController{
         return articleService.getTopFiveMostViewed();
     }
 
-    @GetMapping("/articles/{category}")
-    public ArticleCategoryDTO getArticlesByCategory(@PathVariable String category){
-        return articleService.articleByCategory(category);
-    }
-
     @GetMapping("/articles")
-    public List<ArticleHeadingResponseDTO> getAllArticleTitles(){
+    public List<ArticleHeadingDTO> getAllArticleTitles(){
         return articleService.getAllArticles();
     }
 
