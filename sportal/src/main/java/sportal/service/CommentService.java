@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import sportal.model.dao.CommentDAO;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
+import sportal.model.dto.EditCommentRequestDTO;
+import sportal.model.dto.addCommentReplyRequestDTO;
+import sportal.model.pojo.Article;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
@@ -25,13 +28,11 @@ public class CommentService {
     @Autowired
     CommentDAO commentDAO;
 
-    public void addComment(User loggedUser, AddCommentRequestDTO addedComment) {
-        Comment comment = new Comment();
-        comment.setUser(loggedUser);
-        comment.setArticle(orv.verifyOptionalResult(articleRepository.findById(addedComment.getArticleId())));
-        comment.setCommentText(addedComment.getText());
-        comment.setPostDate(LocalDateTime.now());
+    public ArticleResponseDTO addComment(User loggedUser, AddCommentRequestDTO addedComment) {
+        Article article = orv.verifyOptionalResult(articleRepository.findById(addedComment.getArticleId()));
+        Comment comment = new Comment(addedComment.getText(), LocalDateTime.now(), article, loggedUser);
         commentRepository.save(comment);
+        return new ArticleResponseDTO(article);
     }
 
     public void likeComment(int commentId, int userId) {
@@ -59,5 +60,20 @@ public class CommentService {
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
         comment.setCommentText("deleted on " + LocalDateTime.now());
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId())));
+    }
+
+    public ArticleResponseDTO editComment(EditCommentRequestDTO editedComment) {
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(editedComment.getId()));
+        comment.setCommentText(editedComment.getText());
+        commentRepository.save(comment);
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(editedComment.getArticleId())));
+    }
+
+    public ArticleResponseDTO addCommentReply(User loggedUser, addCommentReplyRequestDTO reply) {
+        Article article = orv.verifyOptionalResult(articleRepository.findById(reply.getArticleId()));
+        Comment parent = orv.verifyOptionalResult(commentRepository.findById(reply.getParentCommentId()));
+        Comment comment = new Comment(reply.getText(), LocalDateTime.now(), article, loggedUser, parent);
+        commentRepository.save(comment);
+        return new ArticleResponseDTO(article);
     }
 }

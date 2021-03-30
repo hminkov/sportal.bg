@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+@Component
 @NoArgsConstructor
 @Getter
 @Setter
-@Component
-public class EditArticleRequestDTO {
+public class EditCommentRequestDTO {
 
+    private int id;
     private int articleId;
-    private String heading;
     private String text;
-    private String category;
 }

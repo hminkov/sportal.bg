@@ -27,7 +27,7 @@ public class ArticleController extends AbstractController{
     @Autowired
     private UserController userController;
 
-    @PostMapping("/articles/new")
+    @PostMapping("/articles")
     public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
             return articleService.postNewArticle(article);
@@ -62,20 +62,20 @@ public class ArticleController extends AbstractController{
         return articleService.getAllArticles();
     }
 
-    @PutMapping("/articles/{articleId}")
-    public ArticleResponseDTO editArticle(@PathVariable int articleId, @RequestBody EditArticleRequestDTO article, HttpSession ses){
+    @PutMapping("/articles")
+    public ArticleResponseDTO editArticle(@RequestBody EditArticleRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
-            return articleService.editArticle(article, articleId);
+            return articleService.editArticle(article, article.getArticleId());
         }
         else{
             throw new AuthenticationException("Requires admin privileges");
         }
     }
 
-    @DeleteMapping("/articles/{articleId}")
-    public void deleteArticle(@PathVariable int articleId, HttpSession ses){
+    @DeleteMapping("/articles/")
+    public void deleteArticle(@RequestBody DeleteArticleRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
-            articleService.deleteArticle(articleId);
+            articleService.deleteArticle(article.getArticleId());
         }
         else{
             throw new AuthenticationException("Requires admin privileges");

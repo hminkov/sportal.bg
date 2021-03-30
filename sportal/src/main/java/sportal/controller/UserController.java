@@ -28,21 +28,19 @@ public class UserController extends AbstractController{
     @Autowired
     private SessionManager sessionManager;
 
-    @PostMapping("/users/register")
+    @PostMapping("/users")
     public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
-//        User user =  sessionManager.getLoggedUser(ses);
-//        if(user != null){
-//            throw new BadRequestException("Trying to register while already logged");
-//        }
+        if(sessionManager.userAlreadyLogged(ses)){
+            throw new BadRequestException("Trying to register while already logged");
+        }
         return userService.registerUser(userDTO);
     }
 
     @PostMapping("/users/login")
     public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
-//        User user =  sessionManager.getLoggedUser(ses);
-//        if(user != null){
-//            throw new BadRequestException("Trying to register while already logged");
-//        }
+        if(sessionManager.userAlreadyLogged(ses)){
+            throw new BadRequestException("Already logged");
+        }
         LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
         sessionManager.loginUser(ses, responseDto.getId());
         return responseDto;
@@ -61,15 +59,6 @@ public class UserController extends AbstractController{
             return userService.changePassword(userDTO, id);
         }
     }
-
-//    @PutMapping("/users/{id}")
-//    public String editProfile(@RequestBody UserDTO userDTO, @PathVariable int id){
-//        if (sessionManager.getLoggedUser(ses) == null) {
-//            throw new AuthenticationException("You have to be logged in!");
-//        } else {
-//            return userService.editProfile(userDTO, id);
-//        }
-//    }
 
     @DeleteMapping("/users")
     public String deleteProfile(HttpSession ses){
