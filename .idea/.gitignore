@@ -1,0 +1,10 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# CodeStream ignored files
+/../../sportal.bg\.idea/codestream.xml
+# Datasource local storage ignored files
+/../../../../:\Sportal_Final_Project\sportal.bg\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/

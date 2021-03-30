@@ -13,6 +13,7 @@ import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IUserRepository;
 import sportal.util.OptionalResultVerifier;
+import sportal.util.Validator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,9 +35,8 @@ public class ArticleService {
     private OptionalResultVerifier orv;
 
     public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
-        if(requestArticle.getHeading().isEmpty() || requestArticle.getText().isEmpty()){
-            throw new BadRequestException("Articles must have a heading and a body");
-        }
+        Validator.validateText(requestArticle.getText());
+        Validator.validateText(requestArticle.getHeading());
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
         realArticle.setArticleText((requestArticle.getText()));
@@ -56,6 +56,7 @@ public class ArticleService {
     }
 
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
+        Validator.validateText(editedArticle.getText());
         Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
         ogArticle.setArticleText(editedArticle.getText());
@@ -70,6 +71,7 @@ public class ArticleService {
     }
 
     private ArticleCategory createNewCategoryOrReturnMatching(String categoryName){
+        Validator.validateText(categoryName);
         if(categoryRepository.findByName(categoryName).isEmpty()){
             ArticleCategory newCategory = new ArticleCategory();
             newCategory.setName(categoryName);
