@@ -14,6 +14,7 @@ import javax.persistence.MappedSuperclass;
 @NoArgsConstructor
 @MappedSuperclass
 public class POJO {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

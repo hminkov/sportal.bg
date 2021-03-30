@@ -6,6 +6,7 @@ import sportal.exceptions.BadRequestException;
 import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditCommentRequestDTO;
+import sportal.model.dto.addCommentReplyRequestDTO;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.service.CommentService;
@@ -25,10 +26,16 @@ public class CommentController extends AbstractController{
     @Autowired
     UserController userController;
 
-    @PostMapping("/articles/{articleId}/comments")
+    @PostMapping("comments")
     public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addComment(loggedUser, comment);
+    }
+
+    @PostMapping("comments/{parentId}")
+    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody addCommentReplyRequestDTO reply){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        return commentService.addCommentReply(loggedUser, reply);
     }
 
     @DeleteMapping("/comments/{commentId}")

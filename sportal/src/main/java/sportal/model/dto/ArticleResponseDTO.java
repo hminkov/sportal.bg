@@ -9,6 +9,7 @@ import sportal.model.pojo.ArticleCategory;
 import sportal.model.pojo.Comment;
 import sportal.model.pojo.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -21,17 +22,27 @@ public class ArticleResponseDTO {
     private String heading;
     private String text;
     private int views;
-    private User author;
+    private UserIDResponseDTO author;
     private ArticleCategory category;
     private List<Comment> comments;
 
     public ArticleResponseDTO(Article article){
         id = article.getId();
-        author = article.getAuthor();
+        author = new UserIDResponseDTO(article.getAuthor());
         heading = article.getHeading();
         text = article.getArticleText();
         category = article.getCategory();
         views = article.getViews();
-        comments = article.getComments();
+        comments = commentWithoutParents(article.getComments());
+    }
+
+    private List<Comment> commentWithoutParents(List<Comment> allComments){
+        List<Comment> orphanComments = new ArrayList<>();
+        for(Comment c : allComments){
+            if(c.getParentComment() == null){
+                orphanComments.add(c);
+            }
+        }
+        return orphanComments;
     }
 }
