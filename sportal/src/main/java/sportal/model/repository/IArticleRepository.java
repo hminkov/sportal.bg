@@ -8,4 +8,5 @@ import sportal.model.pojo.Article;
 @Repository
 @Component
 public interface IArticleRepository extends JpaRepository<Article, Integer> {
+    Article findByHeading(String heading);
 }

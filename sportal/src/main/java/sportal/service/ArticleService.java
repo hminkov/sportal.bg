@@ -1,7 +1,6 @@
 package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
@@ -21,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Component
 public class ArticleService {
 
     @Autowired
@@ -101,24 +99,47 @@ public class ArticleService {
         articleDAO.undislikeArticle(userId, articleId);
     }
 
-    public List<ArticleHeadingResponseDTO> getAllArticles() {
+    public List<ArticleHeadingDTO> getAllArticles() {
         List<Article> articles = articleRepository.findAll();
-        List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
+        List<ArticleHeadingDTO> articleByHeadingDTO = new ArrayList<>();
         for(Article a : articles){
-            articleByHeadingDTO.add(new ArticleHeadingResponseDTO(a));
+            articleByHeadingDTO.add(new ArticleHeadingDTO(a));
         }
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(User authorID) {
-        List<Article> articles = articleRepository.findAll();
-        List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
-        for(Article a : articles){
-            if(a.getAuthor().getId() == authorID.getId()) {
-                articleResponseDTO.add(new ArticleResponseDTO(a));
+    public List<ArticleResponseDTO> getArticleByAuthor(UserIDResponseDTO authorRequest) {
+        User u = userRepository.findByUsername(authorRequest.getUsername());
+        if(u != null) {
+            List<Article> articles = articleRepository.findAll();
+            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+            boolean isFound = false;
+            for (Article a : articles) {
+                if (a.getAuthor().getId() == u.getId()) {
+                    articleResponseDTO.add(new ArticleResponseDTO(a));
+                    isFound = true;
+                }
             }
+            if(isFound) {
+                return articleResponseDTO;
+            }
+            throw new NotFoundException("No articles found from this author");
         }
-        return articleResponseDTO;
+        throw new NotFoundException("Author not found");
+    }
+    public List<ArticleResponseDTO> getArticleByName(String articleName) {
+        Article article = articleRepository.findByHeading(articleName);
+        if(article != null) {
+            List<Article> articles = articleRepository.findAll();
+            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
+            for (Article a : articles) {
+                if (a.getHeading().equals(articleName)) {
+                    articleResponseDTO.add(new ArticleResponseDTO(a));
+                }
+            }
+            return articleResponseDTO;
+        }
+        throw new NotFoundException("Article not found");
     }
 
     public List<ArticleResponseDTO> getTopFiveMostViewed() {

@@ -129,8 +129,8 @@ public class UserService {
         return "Profile successfully deleted. Hope we will see you again soon.";
     }
 
-    public String changePassword(UserDTO userDTO, int id){
-        Optional<User> u = userRepository.findById(id);
+    public String changePassword(UserDTO userDTO, int userId){
+        Optional<User> u = userRepository.findById(userId);
         if (u.isPresent()) {
             User user = u.get();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
