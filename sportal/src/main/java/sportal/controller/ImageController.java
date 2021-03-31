@@ -40,29 +40,13 @@ public class ImageController extends AbstractController{
     @Value("${file.path}")
     private String filePath;
 
-    @PostMapping("/article/{id}/images")
-    public ImageToArticleResponseDTO addImageToArticle(@PathVariable int id, @RequestPart MultipartFile file, HttpSession ses) {
+    @PostMapping("/articles/{id}/images")
+    public ArticleImage addImageToArticle(@PathVariable int id, @RequestPart MultipartFile file, HttpSession ses) {
         User loggedUser = sessionManager.getLoggedUser(ses);
         if (!userController.userIsAdmin(loggedUser)) {
             throw new AuthenticationException("Requires admin privileges!");
-        } else {
-            Optional<Article> a = articleRepository.findById(id);
-            if (!a.isPresent()) {
-                throw new NotFoundException("Trying to upload image to not existing article");
-            }
-            Article article = a.get();
-            File pFile = new File(filePath + File.separator + id + "_" + System.nanoTime() + ".png");
-            try (OutputStream os = new FileOutputStream(pFile)) {
-                os.write(file.getBytes());
-                os.close();
-                return imageService.addImageToArticle(pFile, article);
-            } catch (FileNotFoundException e) {
-                throw new NotFoundException("No files to upload");
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
-            return null;
         }
+        return imageService.uploadImage(filePath, id, file);
     }
 
     @GetMapping(value = "/images/{id}", produces = "image/*")
