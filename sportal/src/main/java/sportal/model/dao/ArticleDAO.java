@@ -8,16 +8,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.UserDTO;
 import sportal.model.pojo.Article;
-import sportal.model.pojo.ArticleCategory;
-import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @NoArgsConstructor
@@ -107,6 +102,5 @@ public class ArticleDAO {
         }
         return articlesByHeading;
     }
-
 
 }

@@ -34,20 +34,28 @@ public class CommentService {
         return new ArticleResponseDTO(article);
     }
 
-    public void likeComment(int commentId, int userId) {
+    public Article likeComment(int commentId, int userId) {
         commentDAO.likeComment(commentId, userId);
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
-    public void dislikeComment(int commentId, int userId){
+    public Article dislikeComment(int commentId, int userId){
         commentDAO.dislikeComment(commentId, userId);
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
-    public void unlikeComment(int userId, int commentId) {
+    public Article unlikeComment(int userId, int commentId) {
         commentDAO.unlikeComment(userId, commentId);
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
-    public void undislikeComment(int userId, int commentId) {
+    public Article undislikeComment(int userId, int commentId) {
         commentDAO.undislikeComment(userId, commentId);
+        Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
     public boolean userOwnsComment(int userId, int commentId) {

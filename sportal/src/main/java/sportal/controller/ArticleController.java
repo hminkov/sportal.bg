@@ -86,27 +86,27 @@ public class ArticleController extends AbstractController{
     }
 
     @PutMapping("/articles/{articleId}/like")
-    public void likeArticle(@PathVariable int articleId, HttpSession ses){
+    public ArticleResponseDTO likeArticle(@PathVariable int articleId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        articleService.likeArticle(loggedUser.getId(), articleId);
+        return new ArticleResponseDTO(articleService.likeArticle(loggedUser.getId(), articleId));
     }
 
     @PutMapping("/articles/{articleId}/dislike")
-    public void dislikeArticle(@PathVariable int articleId, HttpSession ses){
+    public ArticleResponseDTO dislikeArticle(@PathVariable int articleId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        articleService.dislikeArticle(loggedUser.getId(), articleId);
+        return new ArticleResponseDTO(articleService.dislikeArticle(loggedUser.getId(), articleId));
     }
 
     @PutMapping("/articles/{articleId}/unlike")
-    public void unlikeArticle(@PathVariable int articleId, HttpSession ses){
+    public ArticleResponseDTO unlikeArticle(@PathVariable int articleId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        articleService.unlikeArticle(loggedUser.getId(), articleId);
+        return new ArticleResponseDTO(articleService.unlikeArticle(loggedUser.getId(), articleId));
     }
 
     @PutMapping("/articles/{articleId}/undislike")
-    public void undislikeArticle(@PathVariable int articleId, HttpSession ses){
+    public ArticleResponseDTO undislikeArticle(@PathVariable int articleId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        articleService.undislikeArticle(loggedUser.getId(), articleId);
+        return new ArticleResponseDTO(articleService.undislikeArticle(loggedUser.getId(), articleId));
     }
     public boolean isAdmin(User user){
         return userController.userIsAdmin(user);

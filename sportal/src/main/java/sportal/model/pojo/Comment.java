@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -43,6 +44,13 @@ public class Comment extends POJO{
     @JsonManagedReference
     @OneToMany(mappedBy = "parentComment")
     private List<Comment> replies;
+
+    @ManyToMany(mappedBy = "likedComments")
+    @JsonBackReference
+    private Set<User> likes;
+    @ManyToMany(mappedBy = "dislikedComments")
+    @JsonBackReference
+    private Set<User> dislikes;
 
     public Comment(String commentText, LocalDateTime postDate, Article article, User user){
         this.commentText = commentText;

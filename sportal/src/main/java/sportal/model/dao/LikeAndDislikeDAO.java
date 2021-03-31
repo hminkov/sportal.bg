@@ -26,7 +26,7 @@ public class LikeAndDislikeDAO {
         Connection connection = getConnection();
         try(
                 PreparedStatement removeStatement = connection.prepareStatement(removeQuery);
-                PreparedStatement addStatement = connection.prepareStatement(addQuery);
+                PreparedStatement addStatement = connection.prepareStatement(addQuery)
         ) {
             connection.setAutoCommit(false);
             removeStatement.setInt(1, userId);
@@ -70,4 +70,5 @@ public class LikeAndDislikeDAO {
     private Connection getConnection(){
         return jdbcTemplate.getDataSource().getConnection();
     }
+
 }

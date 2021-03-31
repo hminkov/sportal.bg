@@ -1,5 +1,6 @@
 package sportal.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 @Getter
@@ -38,6 +40,12 @@ public class Article extends POJO{
     private ArticleCategory category;
     @OneToMany(mappedBy = "article")
     private List<ArticleImage> images;
+    @ManyToMany(mappedBy = "likedArticles")
+    @JsonBackReference
+    private Set<User> likes;
+    @ManyToMany(mappedBy = "dislikedArticles")
+    @JsonBackReference
+    private Set<User> dislikes;
 
     public Article(){
         comments = new ArrayList<>();

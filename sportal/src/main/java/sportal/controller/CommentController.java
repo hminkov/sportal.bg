@@ -61,27 +61,27 @@ public class CommentController extends AbstractController{
 
 
     @PutMapping("/comments/{commentId}/like")
-    public void likeComment(HttpSession ses, @PathVariable int commentId){
+    public ArticleResponseDTO likeComment(HttpSession ses, @PathVariable int commentId){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        commentService.likeComment(loggedUser.getId(), commentId);
+        return new ArticleResponseDTO(commentService.likeComment(loggedUser.getId(), commentId));
     }
 
     @PutMapping("/comments/{commentId}/dislike")
-    public void dislikeComment(HttpSession ses, @PathVariable int commentId){
+    public ArticleResponseDTO dislikeComment(HttpSession ses, @PathVariable int commentId){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        commentService.dislikeComment(loggedUser.getId(), commentId);
+        return new ArticleResponseDTO(commentService.dislikeComment(loggedUser.getId(), commentId));
     }
 
     @PutMapping("/comments/{commentId}/unlike")
-    public void unlikeComment(@PathVariable int commentId, HttpSession ses){
+    public ArticleResponseDTO unlikeComment(@PathVariable int commentId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        commentService.unlikeComment(loggedUser.getId(), commentId);
+        return new ArticleResponseDTO(commentService.unlikeComment(loggedUser.getId(), commentId));
     }
 
     @PutMapping("/comments/{commentId}/undislike")
-    public void undislikeComment(@PathVariable int commentId, HttpSession ses){
+    public ArticleResponseDTO undislikeComment(@PathVariable int commentId, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        commentService.undislikeComment(loggedUser.getId(), commentId);
+        return new ArticleResponseDTO(commentService.undislikeComment(loggedUser.getId(), commentId));
     }
 
     private boolean userOwnsComment(int userId, int commentId) {

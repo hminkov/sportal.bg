@@ -10,14 +10,10 @@ import sportal.model.pojo.ArticleImage;
 @Getter
 @Setter
 @Component
-public class ImageToArticleResponseDTO {
+public class UploadImageResponseDTO {
     private int id;
-    private String url;
-    private ArticleHeadingDTO article;
 
-    public ImageToArticleResponseDTO(ArticleImage articleImage) {
+    public UploadImageResponseDTO(ArticleImage articleImage) {
         this.id = articleImage.getId();
-        this.url = articleImage.getUrl();
-        this.article = new ArticleHeadingDTO(articleImage.getArticle());
     }
 }

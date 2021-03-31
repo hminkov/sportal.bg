@@ -67,7 +67,7 @@ public class ArticleService {
         Article article = orv.verifyOptionalResult(articleRepository.findById(id));
         article.setViews(article.getViews()+1);
         articleRepository.save(article);
-        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(id)));
+        return new ArticleResponseDTO(article);
     }
 
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
@@ -82,7 +82,8 @@ public class ArticleService {
         else {
             ogArticle.setCategory(orv.verifyOptionalResult(categoryRepository.findByName(editedCategoryName)));
         }
-        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(ogArticle.getId())));
+        articleRepository.save(ogArticle);
+        return new ArticleResponseDTO(ogArticle);
     }
 
     private ArticleCategory createNewCategoryOrReturnMatching(String categoryName){
@@ -100,20 +101,24 @@ public class ArticleService {
         articleRepository.delete(article);
     }
 
-    public void likeArticle(int userId, int articleId) {
+    public Article likeArticle(int userId, int articleId) {
         articleDAO.likeArticle(userId, articleId);
+        return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
-    public void dislikeArticle(int userId, int articleId){
+    public Article dislikeArticle(int userId, int articleId){
         articleDAO.dislikeArticle(userId, articleId);
+        return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
-    public void unlikeArticle(int userId, int articleId) {
+    public Article unlikeArticle(int userId, int articleId) {
         articleDAO.unlikeArticle(userId, articleId);
+        return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
-    public void undislikeArticle(int userId, int articleId) {
+    public Article undislikeArticle(int userId, int articleId) {
         articleDAO.undislikeArticle(userId, articleId);
+        return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
     public List<ArticleHeadingDTO> getAllArticles() {
