@@ -26,8 +26,9 @@ public class ArticleController extends AbstractController{
 
     @PostMapping("/articles")
     public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article, HttpSession ses){
-        if(isAdmin(sessionManager.getLoggedUser(ses))){
-            return articleService.postNewArticle(article);
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(isAdmin(loggedUser)){
+            return articleService.postNewArticle(article, loggedUser);
         }
         else{
             throw new AuthenticationException("Requires admin privileges");

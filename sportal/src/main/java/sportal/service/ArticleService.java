@@ -7,13 +7,16 @@ import sportal.model.dao.ArticleDAO;
 import sportal.model.dto.*;
 import sportal.model.pojo.Article;
 import sportal.model.pojo.ArticleCategory;
+import sportal.model.pojo.ArticleImage;
 import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICategoryRepository;
+import sportal.model.repository.IImageRepository;
 import sportal.model.repository.IUserRepository;
 import sportal.util.OptionalResultVerifier;
 import sportal.util.Validator;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,22 +32,35 @@ public class ArticleService {
     @Autowired
     private ICategoryRepository categoryRepository;
     @Autowired
+    private IImageRepository imageRepository;
+    @Autowired
     private ArticleDAO articleDAO;
     @Autowired
     private OptionalResultVerifier orv;
 
-    public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle) {
+    public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle, User author) {
         Validator.validateText(requestArticle.getText());
         Validator.validateText(requestArticle.getHeading());
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
         realArticle.setArticleText((requestArticle.getText()));
-        User user = orv.verifyOptionalResult(userRepository.findById(requestArticle.getCreatorId()));
-        realArticle.setAuthor(user);
+        realArticle.setAuthor(author);
         realArticle.setCategory(createNewCategoryOrReturnMatching(requestArticle.getCategory()));
         realArticle.setPostDate(LocalDateTime.now());
-        articleRepository.save(realArticle);
+        realArticle = saveArticleToDb(realArticle, requestArticle.getImageIds());
         return new ArticleResponseDTO(realArticle);
+    }
+
+    @Transactional
+    Article saveArticleToDb(Article realArticle, int[] imageIds) {
+        articleRepository.save(realArticle);
+        for(int id : imageIds){
+            ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(id));
+            image.setArticle(realArticle);
+            realArticle.getImages().add(image);
+            imageRepository.save(image);
+        }
+        return realArticle;
     }
 
     public synchronized ArticleResponseDTO getArticleById(int id) {
@@ -128,6 +144,7 @@ public class ArticleService {
         }
         throw new NotFoundException("Author not found");
     }
+
     public List<ArticleResponseDTO> getArticleByName(String articleName){
         List<Article> articles = articleDAO.getArticleByHeading(articleName);
         if(articles.size() > 0) {

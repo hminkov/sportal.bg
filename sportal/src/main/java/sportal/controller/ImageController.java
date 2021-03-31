@@ -14,7 +14,7 @@ import sportal.model.repository.IImageRepository;
 import sportal.model.repository.IArticleRepository;
 import sportal.service.ImageService;
 import sportal.util.SessionManager;
-import sportal.util.Validator;
+import sportal.util.OptionalResultVerifier;
 
 import javax.servlet.http.HttpSession;
 import java.io.*;
@@ -25,22 +25,25 @@ import java.util.Optional;
 public class ImageController extends AbstractController{
 
     @Autowired
-    ImageService imageService;
+    private ImageService imageService;
     @Autowired
-    IArticleRepository articleRepository;
+    private IArticleRepository articleRepository;
     @Autowired
-    IImageRepository articleImageRepository;
+    private IImageRepository articleImageRepository;
     @Autowired
-    SessionManager sessionManager;
+    private SessionManager sessionManager;
     @Autowired
     private UserController userController;
+    @Autowired
+    private OptionalResultVerifier orv;
 
     @Value("${file.path}")
     private String filePath;
 
     @PostMapping("/article/{id}/images")
-    public ImageToArticleResponseDTO addImageToArticle(@PathVariable int id, @RequestPart MultipartFile file, HttpSession ses){
-        if (isAdmin(sessionManager.getLoggedUser(ses))){
+    public ImageToArticleResponseDTO addImageToArticle(@PathVariable int id, @RequestPart MultipartFile file, HttpSession ses) {
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if (!userController.userIsAdmin(loggedUser)) {
             throw new AuthenticationException("Requires admin privileges!");
         } else {
             Optional<Article> a = articleRepository.findById(id);
@@ -64,13 +67,9 @@ public class ImageController extends AbstractController{
 
     @GetMapping(value = "/images/{id}", produces = "image/*")
     public byte[] download(@PathVariable int id) throws IOException {
-        ArticleImage articleImage = articleImageRepository.findById(id).get();
+        ArticleImage articleImage = orv.verifyOptionalResult(articleImageRepository.findById(id));
         String url = articleImage.getUrl();
         File pFile = new File(url);
         return Files.readAllBytes(pFile.toPath());
-    }
-
-    public boolean isAdmin(User user){
-        return userController.userIsAdmin(user);
     }
 }

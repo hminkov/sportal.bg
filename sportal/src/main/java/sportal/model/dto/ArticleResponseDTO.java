@@ -4,9 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
-import sportal.model.pojo.Article;
-import sportal.model.pojo.ArticleCategory;
-import sportal.model.pojo.Comment;
+import sportal.model.pojo.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +22,7 @@ public class ArticleResponseDTO {
     private UserWithoutPasswordResponseDTO author;
     private ArticleCategory category;
     private List<Comment> comments;
+    private int[] imageIds;
 
     public ArticleResponseDTO(Article article){
         id = article.getId();
@@ -33,6 +32,15 @@ public class ArticleResponseDTO {
         category = article.getCategory();
         views = article.getViews();
         comments = commentWithoutParents(article.getComments());
+        imageIds = extractImageIds(article.getImages());
+    }
+
+    private int[] extractImageIds(List<ArticleImage> images) {
+        int[] ids = new int[images.size()];
+        for(int i = 0; i < ids.length; i++){
+            ids[i] = images.get(i).getId();
+        }
+        return ids;
     }
 
     private List<Comment> commentWithoutParents(List<Comment> allComments){

@@ -9,10 +9,13 @@ import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.IImageRepository;
 
 import java.io.File;
+import sportal.util.OptionalResultVerifier;
 
 @Service
 public class ImageService {
 
+    @Autowired
+    private OptionalResultVerifier orv;
     @Autowired
     IArticleRepository iArticleRepository;
     @Autowired
@@ -27,5 +30,22 @@ public class ImageService {
         System.out.println("2 - " + articleImage.getArticle().getArticleText());
         System.out.println("3 - " + article.getHeading());
         return new ImageToArticleResponseDTO(articleImage);
+    }
+
+    private void checkIfParentArticleIsPosted(int id) {
+        Runnable thread = () -> {
+            try {
+                Thread.sleep(60000);
+                ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(id));
+                if(image.getArticle() == null){
+                    imageRepository.delete(image);
+                    File f = new File(image.getUrl());
+                    f.delete();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        };
+        new Thread(thread).start();
     }
 }

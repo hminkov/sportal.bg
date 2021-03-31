@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 @Getter
 @Setter
 public class UserDAO {
-    
+
     private final String SELECT_ADMIN_BY_ID = "SELECT u.id, r.role_name FROM users AS u\n" +
             "JOIN users_have_roles AS uhr ON u.id = uhr.user_id\n" +
             "JOIN roles AS r ON uhr.role_id = r.id\n" +
