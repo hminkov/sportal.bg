@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,5 +51,7 @@ public class Article extends POJO{
     public Article(){
         comments = new ArrayList<>();
         images = new ArrayList<>();
+        likes = new HashSet<>();
+        dislikes = new HashSet<>();
     }
 }

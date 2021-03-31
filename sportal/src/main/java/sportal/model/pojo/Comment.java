@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -57,6 +58,9 @@ public class Comment extends POJO{
         this.postDate = postDate;
         this.article = article;
         this.user = user;
+        replies = new ArrayList<>();
+        likes = new HashSet<>();
+        dislikes = new HashSet<>();
     }
 
     public Comment(String commentText, LocalDateTime postDate, Article article, User user, Comment parentComment){
@@ -65,6 +69,9 @@ public class Comment extends POJO{
         this.article = article;
         this.user = user;
         this.parentComment = parentComment;
+        replies = new ArrayList<>();
+        likes = new HashSet<>();
+        dislikes = new HashSet<>();
     }
 
 
