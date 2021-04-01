@@ -107,7 +107,7 @@ public class ArticleDAO {
         Connection connection = jdbcTemplate.getDataSource().getConnection();
         int offset = pageable.getPageNumber()*pageable.getPageSize();
         try(PreparedStatement ps = connection.prepareStatement(SEARCH_FOR_HEADING)){
-            ps.setString(1, articleHeading);
+            ps.setString(1, "%" + articleHeading +"%");
             ps.setInt(2, pageable.getPageSize());
             ps.setInt(3, offset);
             ResultSet rowSet = ps.executeQuery();
