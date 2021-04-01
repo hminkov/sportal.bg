@@ -114,7 +114,7 @@ public class ArticleDAO {
             while (rowSet.next()) {
                 Article article = new Article();
                 article.setId(rowSet.getInt("id"));
-                article.setHeading("heading");
+                article.setHeading(rowSet.getString("heading"));
                 articlesByHeading.add(article);
             }
         }
