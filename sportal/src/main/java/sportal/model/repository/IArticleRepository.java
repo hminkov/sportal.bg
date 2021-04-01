@@ -15,5 +15,4 @@ import java.util.List;
 public interface IArticleRepository extends JpaRepository<Article, Integer> {
 
     Page<Article> findArticlesByAuthor(User user, Pageable pageable);
-    Page<Article> findArticlesByHeadingContaining(String s, Pageable pageable);
 }

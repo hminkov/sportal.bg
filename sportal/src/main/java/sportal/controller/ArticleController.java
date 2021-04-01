@@ -39,7 +39,7 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/articles/authors")
+    @PutMapping("/articles/authors")
     public List<ArticleHeadingResponseDTO> getArticlesByAuthor(@RequestBody ArticleSerchByAuthorRequestDTO searchRq){
         return articleService.getArticlesByAuthor(searchRq.getUsername(), searchRq.getPage(), searchRq.getResultsPerPage());
     }

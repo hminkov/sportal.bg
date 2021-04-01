@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -17,6 +19,7 @@ import sportal.model.repository.IUserRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +41,7 @@ public class ArticleDAO {
             "SELECT id, heading, article_text, views " +
                     "FROM articles " +
                     "ORDER BY views DESC LIMIT 5;";
-    private final String SEARCH_FOR_HEADING = "SELECT * FROM articles WHERE heading LIKE ? LIMIT ? OFFSET ?";
+    private final String SEARCH_FOR_HEADING = "SELECT id, heading FROM articles WHERE heading LIKE ? LIMIT ? OFFSET ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -96,5 +99,28 @@ public class ArticleDAO {
             topFiveArticles.add(article);
         }
         return topFiveArticles;
+    }
+
+    @SneakyThrows
+    public List<Article> getArticleByHeading(String articleHeading, Pageable pageable){
+        List<Article> articlesByHeading = new ArrayList<>();
+        Connection connection = jdbcTemplate.getDataSource().getConnection();
+        int offset = pageable.getPageNumber()*pageable.getPageSize();
+        try(PreparedStatement ps = connection.prepareStatement(SEARCH_FOR_HEADING)){
+            ps.setString(1, "%" + articleHeading +"%");
+            ps.setInt(2, pageable.getPageSize());
+            ps.setInt(3, offset);
+            ResultSet rowSet = ps.executeQuery();
+            while (rowSet.next()) {
+                Article article = new Article();
+                article.setId(rowSet.getInt("id"));
+                article.setHeading("heading");
+                articlesByHeading.add(article);
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return articlesByHeading;
     }
 }

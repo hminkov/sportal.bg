@@ -146,7 +146,7 @@ public class ArticleService {
 
     public List<ArticleHeadingResponseDTO> getArticleByName(ArticleHeadingSearchRequestDTO articleSearchRequest){
         Pageable pageable = PageRequest.of(articleSearchRequest.getPage(), articleSearchRequest.getResultsPerPage());
-        Page<Article> articles = articleRepository.findArticlesByHeadingContaining(articleSearchRequest.getHeading(), pageable);
+        List<Article> articles = articleDAO.getArticleByHeading(articleSearchRequest.getHeading(), pageable);
         List<ArticleHeadingResponseDTO> articleResults = new ArrayList<>();
         for(Article a : articles){
             articleResults.add(new ArticleHeadingResponseDTO(a));
