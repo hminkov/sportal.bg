@@ -51,7 +51,7 @@ public class UserService {
         //check if username is empty or too short
         Validator.validateUsername(userDTO.getUsername());
         //check if username exists
-        if(userRepository.findByUsername(userDTO.getUsername()) != null){
+        if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new BadRequestException("Username already exists");
         }
         //check if password format is correct
@@ -206,4 +206,7 @@ public class UserService {
         return userDao.userIsAdmin(userBefore);
     }
 
+    public void resetPassword(String username) {
+        emailService.sendForgotPasswordMail(username);
+    }
 }

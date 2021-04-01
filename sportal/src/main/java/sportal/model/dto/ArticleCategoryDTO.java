@@ -20,14 +20,14 @@ public class ArticleCategoryDTO {
     private String category_name;
     @JsonIgnore
     private List<Article> articles;
-    private List<ArticleResponseDTO> articleResponseDTOS;
+    private List<ArticleHeadingResponseDTO> articleResponseDTOS;
 
-    public ArticleCategoryDTO(ArticleCategory a) {
+    public ArticleCategoryDTO(ArticleCategory a, int page, int resultsPerPage) {
         category_name = a.getName();
         articles = a.getArticles();
         articleResponseDTOS = new ArrayList<>();
-        for(Article article : articles){
-            articleResponseDTOS.add(new ArticleResponseDTO(article));
+        for(int i = resultsPerPage * (page-1); i < resultsPerPage * page; i++){
+            articleResponseDTOS.add(new ArticleHeadingResponseDTO(articles.get(i)));
         }
     }
 }

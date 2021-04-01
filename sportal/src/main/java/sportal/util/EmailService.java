@@ -15,12 +15,7 @@ public class EmailService{
     private EmailCfg emailCfg;
 
     public void sendConfirmationEmail(User user){
-
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(this.emailCfg.getHost());
-        mailSender.setPort(this.emailCfg.getPort());
-        mailSender.setUsername(this.emailCfg.getUsername());
-        mailSender.setPassword(this.emailCfg.getPassword());
+        JavaMailSenderImpl mailSender = getMailSender();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("sportalProject@gmail.com");
@@ -30,5 +25,26 @@ public class EmailService{
 
         mailSender.send(mailMessage);
 
+    }
+
+    public void sendForgotPasswordMail(String username) {
+        JavaMailSenderImpl mailSender = getMailSender();
+
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setFrom("sportalProject@gmail.com");
+        mailMessage.setTo("sportalProject@gmail.com");
+        mailMessage.setSubject("registration notice");
+        mailMessage.setText("Life is hard without a password.");
+
+        mailSender.send(mailMessage);
+    }
+
+    private JavaMailSenderImpl getMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(this.emailCfg.getHost());
+        mailSender.setPort(this.emailCfg.getPort());
+        mailSender.setUsername(this.emailCfg.getUsername());
+        mailSender.setPassword(this.emailCfg.getPassword());
+        return mailSender;
     }
 }

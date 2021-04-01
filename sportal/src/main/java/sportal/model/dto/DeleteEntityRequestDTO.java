@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
 @NoArgsConstructor
 @Getter
 @Setter
-public class DeleteCommentRequestDTO {
+public class DeleteEntityRequestDTO {
 
-    private int commentId;
+    private int id;
 }

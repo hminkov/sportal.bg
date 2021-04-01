@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sportal.exceptions.NotFoundException;
 import sportal.model.pojo.ArticleImage;
+import sportal.model.pojo.User;
 import sportal.model.repository.IImageRepository;
 import sportal.util.OptionalResultVerifier;
 
@@ -52,5 +53,10 @@ public class ImageService {
             }
         };
         new Thread(thread).start();
+    }
+
+    public void deleteImage(int imageId) {
+        ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(imageId));
+        imageRepository.delete(image);
     }
 }

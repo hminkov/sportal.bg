@@ -105,21 +105,25 @@ public class ArticleService {
     }
 
     public Article likeArticle(int userId, int articleId) {
+        orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleDAO.likeArticle(userId, articleId);
         return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
     public Article dislikeArticle(int userId, int articleId){
+        orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleDAO.dislikeArticle(userId, articleId);
         return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
     public Article unlikeArticle(int userId, int articleId) {
+        orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleDAO.unlikeArticle(userId, articleId);
         return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
     public Article undislikeArticle(int userId, int articleId) {
+        orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleDAO.undislikeArticle(userId, articleId);
         return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
@@ -167,10 +171,10 @@ public class ArticleService {
         throw new NotFoundException("No articles found");
     }
 
-    public ArticleCategoryDTO articleByCategory(int catID) {
+    public ArticleCategoryDTO articleByCategory(int catID, int page, int resultsPerPage) {
         Optional<ArticleCategory> categoryOptional = categoryRepository.findById(catID);
         if(categoryOptional.isPresent()){
-            return new ArticleCategoryDTO(categoryOptional.get());
+            return new ArticleCategoryDTO(categoryOptional.get(), page, resultsPerPage);
         }
         else{
             throw new NotFoundException("Category not found");

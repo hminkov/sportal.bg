@@ -38,10 +38,10 @@ public class CommentController extends AbstractController{
     }
 
     @DeleteMapping("/comments")
-    public ArticleResponseDTO deleteComment(HttpSession ses, @RequestBody DeleteCommentRequestDTO comment){
+    public ArticleResponseDTO deleteComment(HttpSession ses, @RequestBody DeleteEntityRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
-        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), comment.getCommentId())){
-            return commentService.deleteComment(comment.getCommentId());
+        if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), comment.getId())){
+            return commentService.deleteComment(comment.getId());
         }
         else{
             throw new BadRequestException("You can only delete your own comments");
@@ -58,7 +58,6 @@ public class CommentController extends AbstractController{
             throw new BadRequestException("Only the owner of the comment can edit it");
         }
     }
-
 
     @PutMapping("/comments/{commentId}/like")
     public ArticleResponseDTO likeComment(HttpSession ses, @PathVariable int commentId){

@@ -51,13 +51,13 @@ public class UserController extends AbstractController{
         return sessionManager.logoutUser(ses);
     }
 
-    @PutMapping("/users/edit")
+    @PutMapping("/users")
     public UserWithoutPasswordResponseDTO editUser(@RequestBody UserDTO requestDto, HttpSession session){
         User user = sessionManager.getLoggedUser(session);
         return userService.editProfile(requestDto,user);
     }
 
-    @PutMapping("/users")
+    @PatchMapping("/users")
     public UserWithoutPasswordResponseDTO changePassword(@RequestBody UserDTO requestDto, HttpSession ses){
         if (sessionManager.getLoggedUser(ses) == null) {
             throw new AuthenticationException("You have to be logged in!");
@@ -89,6 +89,11 @@ public class UserController extends AbstractController{
     @GetMapping("/users")
     public List<UserWithoutPasswordResponseDTO> getAllUsers(){
         return userService.getAllUsers();
+    }
+
+    @PutMapping("/users/reset-password")
+    public void resetPassword(@RequestBody LoginRequestUserDTO request){
+        userService.resetPassword(request.getUsername());
     }
 
     public boolean userIsAdmin(User user){
