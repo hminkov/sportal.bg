@@ -91,6 +91,11 @@ public class UserController extends AbstractController{
         return userService.getAllUsers();
     }
 
+    @PutMapping("/users/reset-password")
+    public void resetPassword(@RequestBody LoginRequestUserDTO request){
+        userService.resetPassword(request.getUsername());
+    }
+
     public boolean userIsAdmin(User user){
         return userService.userIsAdmin(user);
     }

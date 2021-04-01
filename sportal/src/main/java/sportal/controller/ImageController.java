@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sportal.exceptions.AuthenticationException;
+import sportal.model.dto.DeleteEntityRequestDTO;
 import sportal.model.dto.UploadImageResponseDTO;
 import sportal.model.pojo.ArticleImage;
 import sportal.model.pojo.User;
@@ -23,7 +24,7 @@ public class ImageController extends AbstractController{
     @Autowired
     private ImageService imageService;
     @Autowired
-    private IImageRepository articleImageRepository;
+    private IImageRepository imageRepository;
     @Autowired
     private SessionManager sessionManager;
     @Autowired
@@ -45,9 +46,20 @@ public class ImageController extends AbstractController{
 
     @GetMapping(value = "/images/{id}", produces = "image/*")
     public byte[] download(@PathVariable int id) throws IOException {
-        ArticleImage articleImage = orv.verifyOptionalResult(articleImageRepository.findById(id));
+        ArticleImage articleImage = orv.verifyOptionalResult(imageRepository.findById(id));
         String url = articleImage.getUrl();
         File pFile = new File(url);
         return Files.readAllBytes(pFile.toPath());
+    }
+
+    @DeleteMapping("/images")
+    public void deleteImage(@RequestBody DeleteEntityRequestDTO deleteRq, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(userController.userIsAdmin(loggedUser)){
+            imageService.deleteImage(deleteRq.getId());
+        }
+        else{
+            throw new AuthenticationException("Deleting images requires admin privileges");
+        }
     }
 }

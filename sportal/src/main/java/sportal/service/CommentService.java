@@ -34,27 +34,27 @@ public class CommentService {
         return new ArticleResponseDTO(article);
     }
 
-    public Article likeComment(int commentId, int userId) {
-        commentDAO.likeComment(commentId, userId);
+    public Article likeComment(int userId, int commentId) {
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        commentDAO.likeComment(userId, commentId);
         return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
-    public Article dislikeComment(int commentId, int userId){
-        commentDAO.dislikeComment(commentId, userId);
+    public Article dislikeComment(int userId, int commentId){
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        commentDAO.dislikeComment(userId, commentId);
         return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
     public Article unlikeComment(int userId, int commentId) {
-        commentDAO.unlikeComment(userId, commentId);
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        commentDAO.unlikeComment(userId, commentId);
         return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
     public Article undislikeComment(int userId, int commentId) {
-        commentDAO.undislikeComment(userId, commentId);
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
+        commentDAO.undislikeComment(userId, commentId);
         return orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId()));
     }
 
@@ -65,8 +65,9 @@ public class CommentService {
 
     public ArticleResponseDTO deleteComment(int commentId) {
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
-        comment.setCommentText("deleted on " + LocalDateTime.now());
-        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(comment.getArticle().getId())));
+        int articleId = comment.getArticle().getId();
+        commentRepository.delete(comment);
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(articleId)));
     }
 
     public ArticleResponseDTO editComment(EditCommentRequestDTO editedComment) {

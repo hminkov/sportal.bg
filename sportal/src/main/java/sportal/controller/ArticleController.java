@@ -39,7 +39,7 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @PutMapping("/articles/authors")
+    @GetMapping("/articles/authors")
     public List<ArticleHeadingResponseDTO> getArticlesByAuthor(@RequestBody ArticleSerchByAuthorRequestDTO searchRq){
         return articleService.getArticlesByAuthor(searchRq.getUsername(), searchRq.getPage(), searchRq.getResultsPerPage());
     }
@@ -50,8 +50,8 @@ public class ArticleController extends AbstractController{
     }
 
     @GetMapping("/categories/{id}")
-    public ArticleCategoryDTO getArticleByCategory(@PathVariable int id){
-        return articleService.articleByCategory(id);
+    public ArticleCategoryDTO getArticleByCategory(@PathVariable int id, @RequestBody PagedSearchRequestDTO pagesDTO){
+        return articleService.articleByCategory(id, pagesDTO.getPage(), pagesDTO.getResultsPerPage());
     }
 
     @GetMapping("/articles/top5")
@@ -67,17 +67,17 @@ public class ArticleController extends AbstractController{
     @PutMapping("/articles")
     public ArticleResponseDTO editArticle(@RequestBody EditArticleRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
-            return articleService.editArticle(article, article.getArticleId());
+            return articleService.editArticle(article, article.getId());
         }
         else{
             throw new AuthenticationException("Requires admin privileges");
         }
     }
 
-    @DeleteMapping("/articles/")
-    public void deleteArticle(@RequestBody DeleteArticleRequestDTO article, HttpSession ses){
+    @DeleteMapping("/articles")
+    public void deleteArticle(@RequestBody DeleteEntityRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
-            articleService.deleteArticle(article.getArticleId());
+            articleService.deleteArticle(article.getId());
         }
         else{
             throw new AuthenticationException("Requires admin privileges");
