@@ -5,9 +5,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import sportal.model.pojo.User;
 
+import java.awt.print.Pageable;
+import java.util.Optional;
+
 @Repository
 @Component
 public interface IUserRepository extends JpaRepository<User, Integer> {
     User findByEmail(String email);
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 }

@@ -8,7 +8,6 @@ import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.util.SessionManager;
-import sportal.util.Validator;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -40,14 +39,14 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @PutMapping("/articles/authors")
-    public List<ArticleResponseDTO> getArticleByAuthor(@RequestBody UserWithoutPasswordResponseDTO author){
-        return articleService.getArticleByAuthor(author);
+    @GetMapping("/articles/authors")
+    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(@RequestBody ArticleSerchByAuthorRequestDTO searchRq){
+        return articleService.getArticlesByAuthor(searchRq.getUsername(), searchRq.getPage(), searchRq.getResultsPerPage());
     }
 
-    @PutMapping("/articles/by-name")
-    public List<ArticleResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingDTO articleName){
-        return articleService.getArticleByName(articleName.getHeading());
+    @GetMapping("/articles/by-name")
+    public List<ArticleHeadingResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingSearchRequestDTO articleRequest){
+        return articleService.getArticleByName(articleRequest);
     }
 
     @GetMapping("/categories/{id}")
@@ -61,8 +60,8 @@ public class ArticleController extends AbstractController{
     }
 
     @GetMapping("/articles")
-    public List<ArticleHeadingDTO> getAllArticleTitles(){
-        return articleService.getAllArticles();
+    public List<ArticleHeadingResponseDTO> getAllArticleTitles(@RequestBody PagedSearchRequestDTO pageRequest){
+        return articleService.getAllArticles(pageRequest);
     }
 
     @PutMapping("/articles")

@@ -1,6 +1,9 @@
 package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import sportal.exceptions.NotFoundException;
 import sportal.model.dao.ArticleDAO;
@@ -121,46 +124,34 @@ public class ArticleService {
         return orv.verifyOptionalResult(articleRepository.findById(articleId));
     }
 
-    public List<ArticleHeadingDTO> getAllArticles() {
-        List<Article> articles = articleRepository.findAll();
-        List<ArticleHeadingDTO> articleByHeadingDTO = new ArrayList<>();
+    public List<ArticleHeadingResponseDTO> getAllArticles(PagedSearchRequestDTO pageRequest) {
+        Page<Article> articles = articleRepository.findAll(PageRequest.of(pageRequest.getPage(), pageRequest.getResultsPerPage()));
+        List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
         for(Article a : articles){
-            articleByHeadingDTO.add(new ArticleHeadingDTO(a));
+            articleByHeadingDTO.add(new ArticleHeadingResponseDTO(a));
         }
         return articleByHeadingDTO;
     }
 
-    public List<ArticleResponseDTO> getArticleByAuthor(UserWithoutPasswordResponseDTO authorRequest) {
-        User u = userRepository.findByUsername(authorRequest.getUsername());
-        if(u != null) {
-            List<Article> articles = articleRepository.findAll();
-            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
-            boolean isFound = false;
-            for (Article a : articles) {
-                if (a.getAuthor().getId() == u.getId()) {
-                    articleResponseDTO.add(new ArticleResponseDTO(a));
-                    isFound = true;
-                }
-            }
-            if(isFound) {
-                return articleResponseDTO;
-            }
-            throw new NotFoundException("No articles found from this author");
+    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(String username, int page, int resultsPerPage) {
+        User user = orv.verifyOptionalResult(userRepository.findByUsername(username));
+        Pageable pageable = PageRequest.of(page, resultsPerPage);
+        Page<Article> articles = articleRepository.findArticlesByAuthor(user, pageable);
+        List<ArticleHeadingResponseDTO> articleResponse = new ArrayList<>();
+        for(Article a : articles){
+            articleResponse.add(new ArticleHeadingResponseDTO(a));
         }
-        throw new NotFoundException("Author not found");
+        return articleResponse;
     }
 
-    public List<ArticleResponseDTO> getArticleByName(String articleName){
-        List<Article> articles = articleDAO.getArticleByHeading(articleName);
-        if(articles.size() > 0) {
-            List<ArticleResponseDTO> articleResponseDTO = new ArrayList<>();
-            for (Article a : articles) {
-                Optional<Article> articleById = articleRepository.findById(a.getId());
-                articleById.ifPresent(article -> articleResponseDTO.add(new ArticleResponseDTO(article)));
-            }
-            return articleResponseDTO;
+    public List<ArticleHeadingResponseDTO> getArticleByName(ArticleHeadingSearchRequestDTO articleSearchRequest){
+        Pageable pageable = PageRequest.of(articleSearchRequest.getPage(), articleSearchRequest.getResultsPerPage());
+        Page<Article> articles = articleRepository.findArticlesByHeadingContaining(articleSearchRequest.getHeading(), pageable);
+        List<ArticleHeadingResponseDTO> articleResults = new ArrayList<>();
+        for(Article a : articles){
+            articleResults.add(new ArticleHeadingResponseDTO(a));
         }
-        throw new NotFoundException("Article with such title not found");
+        return articleResults;
     }
 
     public List<ArticleResponseWithoutComDTO> getTopFiveMostViewed() {

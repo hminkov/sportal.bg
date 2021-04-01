@@ -1,5 +1,6 @@
 package sportal.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -10,15 +11,13 @@ import sportal.model.pojo.Article;
 @Getter
 @Setter
 @Component
-public class ArticleHeadingDTO {
+public class ArticleHeadingResponseDTO {
 
     private int id;
     private String heading;
-    private String text;
 
-    public ArticleHeadingDTO(Article article){
+    public ArticleHeadingResponseDTO(Article article){
         this.id = article.getId();
         this.heading = article.getHeading();
-        this.text = article.getArticleText();
     }
 }
