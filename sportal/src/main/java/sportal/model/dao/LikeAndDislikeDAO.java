@@ -47,6 +47,7 @@ public class LikeAndDislikeDAO {
         finally {
             try {
                 connection.setAutoCommit(true);
+                connection.close();
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
@@ -63,11 +64,32 @@ public class LikeAndDislikeDAO {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        }
         return false;
+    }
+
+    int getLikesOrDislikes(int entityId, String selectLikesQuery){
+        Connection connection = getConnection();
+        try(PreparedStatement ps = connection.prepareStatement(selectLikesQuery)){
+            ps.setInt(1, entityId);
+            ResultSet rs = ps.executeQuery(selectLikesQuery);
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return 0;
     }
 
     @SneakyThrows
     private Connection getConnection(){
         return jdbcTemplate.getDataSource().getConnection();
     }
+
 }

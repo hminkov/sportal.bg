@@ -1,5 +1,6 @@
 package sportal.service;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
 import sportal.util.EmailService;
+import sportal.util.OptionalResultVerifier;
 import sportal.util.Validator;
 
 import javax.servlet.http.HttpSession;
@@ -35,6 +37,8 @@ public class UserService {
     UserDAO userDao;
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private OptionalResultVerifier orv;
 
 
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
@@ -88,11 +92,12 @@ public class UserService {
     }
 
     public LoginResponseUserDTO loginUser(LoginRequestUserDTO dto) {
-        User user = userRepository.findByUsername(dto.getUsername());
-        if(user == null){
+        Optional<User> optionalUser = userRepository.findByUsername(dto.getUsername());
+        if(optionalUser.isEmpty()){
             throw new AuthenticationException("Wrong credentials");
         }
         else{
+            User user = optionalUser.get();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             if(encoder.matches(dto.getPassword(), user.getPassword())){
                 return new LoginResponseUserDTO(user);
