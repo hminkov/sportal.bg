@@ -54,4 +54,8 @@ public class UserDAO {
         }
         return false;
     }
+
+    public void insertUserInRolesTable(int id) {
+        jdbcTemplate.execute("INSERT INTO users_have_roles (user_id, role_id) VALUES (" + id +  ", 2)");
+    }
 }

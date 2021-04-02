@@ -2,8 +2,10 @@ package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sportal.exceptions.BadRequestException;
 import sportal.model.dao.CommentDAO;
 import sportal.model.dto.AddCommentReplyRequestDTO;
+import sportal.model.dto.AddCommentRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.EditCommentRequestDTO;
 import sportal.model.pojo.Article;
@@ -12,6 +14,7 @@ import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICommentRepository;
 import sportal.util.OptionalResultVerifier;
+import sportal.util.Validator;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +30,7 @@ public class CommentService {
     @Autowired
     CommentDAO commentDAO;
 
-    public ArticleResponseDTO addComment(User loggedUser, AddCommentReplyRequestDTO addedComment) {
+    public ArticleResponseDTO addComment(User loggedUser, AddCommentRequestDTO addedComment) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(addedComment.getArticleId()));
         Comment comment = new Comment(addedComment.getText(), LocalDateTime.now(), article, loggedUser);
         commentRepository.save(comment);
@@ -72,14 +75,15 @@ public class CommentService {
 
     public ArticleResponseDTO editComment(EditCommentRequestDTO editedComment) {
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(editedComment.getId()));
+        Validator.validateText(editedComment.getText());
         comment.setCommentText(editedComment.getText());
         commentRepository.save(comment);
         return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(editedComment.getArticleId())));
     }
 
     public ArticleResponseDTO addCommentReply(User loggedUser, AddCommentReplyRequestDTO reply) {
-        Article article = orv.verifyOptionalResult(articleRepository.findById(reply.getArticleId()));
         Comment parent = orv.verifyOptionalResult(commentRepository.findById(reply.getParentCommentId()));
+        Article article = parent.getArticle();
         Comment comment = new Comment(reply.getText(), LocalDateTime.now(), article, loggedUser, parent);
         commentRepository.save(comment);
         return new ArticleResponseDTO(article);

@@ -20,8 +20,8 @@ public class ImageService {
     private OptionalResultVerifier orv;
 
 
-    public ArticleImage uploadImage(String filePath, int articleId, MultipartFile file){
-        File pFile = new File(filePath + File.separator + articleId + "_" + System.nanoTime() + ".png");
+    public ArticleImage uploadImage(String filePath, MultipartFile file){
+        File pFile = new File(filePath + File.separator + "_" + System.nanoTime() + ".png");
         try(OutputStream os = new FileOutputStream(pFile)){
             os.write(file.getBytes());
             ArticleImage articleImage = new ArticleImage();
@@ -58,5 +58,7 @@ public class ImageService {
     public void deleteImage(int imageId) {
         ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(imageId));
         imageRepository.delete(image);
+        File f = new File(image.getUrl());
+        f.delete();
     }
 }

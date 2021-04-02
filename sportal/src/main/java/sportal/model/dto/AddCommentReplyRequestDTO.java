@@ -12,6 +12,5 @@ import org.springframework.stereotype.Component;
 public class AddCommentReplyRequestDTO {
 
     private int parentCommentId;
-    private int articleId;
     private String text;
 }

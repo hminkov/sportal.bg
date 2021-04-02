@@ -14,5 +14,5 @@ import java.util.List;
 @Component
 public interface IArticleRepository extends JpaRepository<Article, Integer> {
 
-    Page<Article> findArticlesByAuthor(User user, Pageable pageable);
+    Page<Article> findArticlesByAuthor_UsernameContaining(String username, Pageable pageable);
 }

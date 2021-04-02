@@ -67,6 +67,7 @@ public class UserService {
         //save new user to DB by userRepository
         User user = new User(userDTO);
         user = userRepository.save(user);
+        userDao.insertUserInRolesTable(user.getId());
         RegisterResponseUserDTO responseUserDTO = new RegisterResponseUserDTO(user);
         emailService.sendConfirmationEmail(user);
         return responseUserDTO;

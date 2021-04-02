@@ -82,13 +82,25 @@ public class UserController extends AbstractController{
     }
 
     @GetMapping("/users/{id}")
-    public UserWithCommentsDTO getUserByID(@PathVariable int id){
-        return userService.getUserById(id);
+    public UserWithCommentsDTO getUserByID(@PathVariable int id, HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(userIsAdmin(loggedUser)) {
+            return userService.getUserById(id);
+        }
+        else{
+            throw new AuthenticationException("Request requires admin privileges");
+        }
     }
 
     @GetMapping("/users")
-    public List<UserWithoutPasswordResponseDTO> getAllUsers(){
-        return userService.getAllUsers();
+    public List<UserWithoutPasswordResponseDTO> getAllUsers(HttpSession ses){
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if(userIsAdmin(loggedUser)) {
+            return userService.getAllUsers();
+        }
+        else{
+            throw new AuthenticationException("Request requires admin privileges");
+        }
     }
 
     @PutMapping("/users/reset-password")

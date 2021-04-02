@@ -35,13 +35,13 @@ public class ImageController extends AbstractController{
     @Value("${file.path}")
     private String filePath;
 
-    @PostMapping("/articles/{id}/images")
-    public UploadImageResponseDTO addImageToArticle(@PathVariable int id, @RequestPart MultipartFile file, HttpSession ses) {
+    @PostMapping("/images")
+    public UploadImageResponseDTO addImageToArticle(@RequestPart MultipartFile file, HttpSession ses) {
         User loggedUser = sessionManager.getLoggedUser(ses);
         if (!userController.userIsAdmin(loggedUser)) {
             throw new AuthenticationException("Requires admin privileges!");
         }
-        return new UploadImageResponseDTO(imageService.uploadImage(filePath, id, file));
+        return new UploadImageResponseDTO(imageService.uploadImage(filePath, file));
     }
 
     @GetMapping(value = "/images/{id}", produces = "image/*")

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
 import sportal.model.dao.ArticleDAO;
 import sportal.model.dto.*;
@@ -44,6 +45,7 @@ public class ArticleService {
     public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle, User author) {
         Validator.validateText(requestArticle.getText());
         Validator.validateText(requestArticle.getHeading());
+        verifyThatImagesAreNotTaken(requestArticle);
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
         realArticle.setArticleText((requestArticle.getText()));
@@ -75,6 +77,7 @@ public class ArticleService {
 
     public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
         Validator.validateText(editedArticle.getText());
+        Validator.validateText(editedArticle.getHeading());
         Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
         ogArticle.setArticleText(editedArticle.getText());
@@ -138,10 +141,9 @@ public class ArticleService {
     }
 
     public List<ArticleHeadingResponseDTO> getArticlesByAuthor(String username, int page, int resultsPerPage) {
-        User user = orv.verifyOptionalResult(userRepository.findByUsername(username));
-        Pageable pageable = PageRequest.of(page, resultsPerPage);
-        Page<Article> articles = articleRepository.findArticlesByAuthor(user, pageable);
         List<ArticleHeadingResponseDTO> articleResponse = new ArrayList<>();
+        Pageable pageable = PageRequest.of(page, resultsPerPage);
+        Page<Article> articles = articleRepository.findArticlesByAuthor_UsernameContaining(username, pageable);
         for(Article a : articles){
             articleResponse.add(new ArticleHeadingResponseDTO(a));
         }
@@ -178,6 +180,15 @@ public class ArticleService {
         }
         else{
             throw new NotFoundException("Category not found");
+        }
+    }
+
+    private void verifyThatImagesAreNotTaken(CreateArticleRequestDTO requestArticle) {
+        for(int imageId : requestArticle.getImageIds()){
+            ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(imageId));
+            if(image.getArticle() != null){
+                throw new BadRequestException("One of the images you've chosen for your article already belongs to another article.");
+            }
         }
     }
 }
