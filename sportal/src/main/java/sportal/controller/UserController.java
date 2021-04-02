@@ -47,7 +47,7 @@ public class UserController extends AbstractController{
     }
 
     @PostMapping("/users/logout")
-    public String logout(HttpSession ses){
+    public LogoutUserDTO logout(HttpSession ses){
         return sessionManager.logoutUser(ses);
     }
 
@@ -74,7 +74,9 @@ public class UserController extends AbstractController{
         } else {
             User user = sessionManager.getLoggedUser(ses);
             try {
-                return userService.deleteProfile(userDTO, user);
+                UserWithoutPasswordResponseDTO deletedUser = userService.deleteProfile(userDTO, user);
+                ses.invalidate();
+                return deletedUser;
             } catch (SQLException e) {
                 throw new DBException("Something went wrong");
             }

@@ -42,29 +42,21 @@ public class UserService {
 
 
     public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
-        //check if email format is correct
         Validator.emailFormatValidator(userDTO.getEmail());
-        //check if email exists
         if(userRepository.findByEmail(userDTO.getEmail()) != null){
             throw new BadRequestException("Email already exists");
         }
-        //check if username is empty or too short
         Validator.validateUsername(userDTO.getUsername());
-        //check if username exists
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new BadRequestException("Username already exists");
         }
-        //check if password format is correct
         Validator.passwordFormatValidator(userDTO.getPassword());
-        //check if passwords are equal
         if (userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
-            //set cached version of the password for this user
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
         } else {
             throw new BadRequestException("The passwords do not match!");
         }
-        //save new user to DB by userRepository
         User user = new User(userDTO);
         user = userRepository.save(user);
         userDao.insertUserInRolesTable(user.getId());
@@ -168,8 +160,7 @@ public class UserService {
                 throw new WrongCredentialsException("Passwords does not match. Try again!");
             }
             Optional<User> deletedUser = userRepository.findById(user.getId());
-            UserWithoutPasswordResponseDTO deletedResponse = new UserWithoutPasswordResponseDTO(deletedUser.get());
-            return deletedResponse;
+            return new UserWithoutPasswordResponseDTO(deletedUser.get());
         }
         else {
             throw new NotFoundException("User not found!");
