@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import sportal.controller.AbstractController;
 import sportal.exceptions.AuthenticationException;
-import sportal.model.dto.LogoutUserDTO;
+import sportal.model.dto.UserLogoutDTO;
 import sportal.model.pojo.User;
 import sportal.model.repository.IUserRepository;
 
@@ -32,9 +32,9 @@ public class SessionManager extends AbstractController {
         ses.setAttribute(LOGGED_USER_ID, id);
     }
 
-    public LogoutUserDTO logoutUser(HttpSession ses) {
+    public UserLogoutDTO logoutUser(HttpSession ses) {
         ses.invalidate();
-        LogoutUserDTO logoutUserDTO = new LogoutUserDTO();
+        UserLogoutDTO logoutUserDTO = new UserLogoutDTO();
         return logoutUserDTO;
     }
 

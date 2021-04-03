@@ -3,7 +3,6 @@ package sportal.model.pojo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +23,7 @@ public class Article extends POJO{
 
     private int views;
     private String heading;
-    private String articleText;
+    private String text;
     private LocalDateTime postDate;
     @JsonManagedReference
     @ManyToOne

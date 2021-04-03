@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.DeleteEntityRequestDTO;
-import sportal.model.dto.UploadImageResponseDTO;
+import sportal.model.dto.ImageUploadResponseDTO;
 import sportal.model.pojo.ArticleImage;
 import sportal.model.pojo.User;
 import sportal.model.repository.IImageRepository;
@@ -36,12 +36,12 @@ public class ImageController extends AbstractController{
     private String filePath;
 
     @PostMapping("/images")
-    public UploadImageResponseDTO addImageToArticle(@RequestPart MultipartFile file, HttpSession ses) {
+    public ImageUploadResponseDTO addImageToArticle(@RequestPart MultipartFile file, HttpSession ses) {
         User loggedUser = sessionManager.getLoggedUser(ses);
         if (!userController.userIsAdmin(loggedUser)) {
             throw new AuthenticationException("Requires admin privileges!");
         }
-        return new UploadImageResponseDTO(imageService.uploadImage(filePath, file));
+        return new ImageUploadResponseDTO(imageService.uploadImage(filePath, file));
     }
 
     @GetMapping(value = "/images/{id}", produces = "image/*")

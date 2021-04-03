@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-public class AddCommentRequestDTO {
+public class CommentAddRequestDTO {
     private int articleId;
     private String text;
 }

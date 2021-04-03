@@ -5,12 +5,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
 @Setter
 @Getter
+@NoArgsConstructor
 @Component
-public class AddCommentReplyRequestDTO {
+public class UserRegisterRequestDTO {
 
-    private int parentCommentId;
-    private String text;
+    private String username;
+    private String password;
+    private String confirmPassword;
+    private String email;
 }

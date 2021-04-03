@@ -30,7 +30,7 @@ public class ArticleResponseDTO {
         id = article.getId();
         author = new UserWithoutPasswordResponseDTO(article.getAuthor());
         heading = article.getHeading();
-        text = article.getArticleText();
+        text = article.getText();
         category = article.getCategory();
         views = article.getViews();
         commentDtos = new ArrayList<>();

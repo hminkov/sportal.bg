@@ -24,7 +24,7 @@ public class ArticleController extends AbstractController{
     private UserController userController;
 
     @PostMapping("/articles")
-    public ArticleResponseDTO createNewArticle(@RequestBody CreateArticleRequestDTO article, HttpSession ses){
+    public ArticleResponseDTO createNewArticle(@RequestBody ArticleCreateRequestDTO article, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
         if(isAdmin(loggedUser)){
             return articleService.postNewArticle(article, loggedUser);
@@ -50,7 +50,7 @@ public class ArticleController extends AbstractController{
     }
 
     @GetMapping("/categories/{id}")
-    public ArticleCategoryDTO getArticleByCategory(@PathVariable int id, @RequestBody PagedSearchRequestDTO pagesDTO){
+    public List<ArticleResponseWithoutComDTO> getArticleByCategory(@PathVariable int id, @RequestBody PagedSearchRequestDTO pagesDTO){
         return articleService.articleByCategory(id, pagesDTO.getPage(), pagesDTO.getResultsPerPage());
     }
 
@@ -65,7 +65,7 @@ public class ArticleController extends AbstractController{
     }
 
     @PutMapping("/articles")
-    public ArticleResponseDTO editArticle(@RequestBody EditArticleRequestDTO article, HttpSession ses){
+    public ArticleResponseDTO editArticle(@RequestBody ArticleEditRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
             return articleService.editArticle(article, article.getId());
         }

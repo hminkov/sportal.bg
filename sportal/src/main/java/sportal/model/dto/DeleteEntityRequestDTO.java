@@ -9,6 +9,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DeleteEntityRequestDTO {
-
     private int id;
 }

@@ -1,6 +1,5 @@
 package sportal.service;
 
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,10 +8,10 @@ import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.BadRequestException;
 import sportal.exceptions.NotFoundException;
 import sportal.model.dao.UserDAO;
-import sportal.model.dto.LoginRequestUserDTO;
-import sportal.model.dto.LoginResponseUserDTO;
-import sportal.model.dto.RegisterRequestUserDTO;
-import sportal.model.dto.RegisterResponseUserDTO;
+import sportal.model.dto.UserLoginRequestDTO;
+import sportal.model.dto.UserLoginResponseDTO;
+import sportal.model.dto.UserRegisterRequestDTO;
+import sportal.model.dto.UserRegisterResponseDTO;
 import sportal.exceptions.WrongCredentialsException;
 
 import sportal.model.dto.*;
@@ -22,7 +21,6 @@ import sportal.util.EmailService;
 import sportal.util.OptionalResultVerifier;
 import sportal.util.Validator;
 
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +39,7 @@ public class UserService {
     private OptionalResultVerifier orv;
 
 
-    public RegisterResponseUserDTO registerUser(RegisterRequestUserDTO userDTO){
+    public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO){
         Validator.emailFormatValidator(userDTO.getEmail());
         if(userRepository.findByEmail(userDTO.getEmail()) != null){
             throw new BadRequestException("Email already exists");
@@ -60,7 +58,7 @@ public class UserService {
         User user = new User(userDTO);
         user = userRepository.save(user);
         userDao.insertUserInRolesTable(user.getId());
-        RegisterResponseUserDTO responseUserDTO = new RegisterResponseUserDTO(user);
+        UserRegisterResponseDTO responseUserDTO = new UserRegisterResponseDTO(user);
         emailService.sendConfirmationEmail(user);
         return responseUserDTO;
     }
@@ -84,7 +82,7 @@ public class UserService {
         return userIDResponseDTO;
     }
 
-    public LoginResponseUserDTO loginUser(LoginRequestUserDTO dto) {
+    public UserLoginResponseDTO loginUser(UserLoginRequestDTO dto) {
         Optional<User> optionalUser = userRepository.findByUsername(dto.getUsername());
         if(optionalUser.isEmpty()){
             throw new AuthenticationException("Wrong credentials");
@@ -93,7 +91,7 @@ public class UserService {
             User user = optionalUser.get();
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             if(encoder.matches(dto.getPassword(), user.getPassword())){
-                return new LoginResponseUserDTO(user);
+                return new UserLoginResponseDTO(user);
             }
             else{
                 throw new AuthenticationException("Wrong credentials");

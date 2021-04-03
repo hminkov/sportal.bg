@@ -3,7 +3,7 @@ package sportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.AddCommentReplyRequestDTO;
+import sportal.model.dto.CommentAddReplyRequestDTO;
 import sportal.model.dto.ArticleResponseDTO;
 import sportal.model.dto.*;
 import sportal.model.pojo.User;
@@ -26,13 +26,13 @@ public class CommentController extends AbstractController{
     UserController userController;
 
     @PostMapping("comments")
-    public ArticleResponseDTO postComment(HttpSession ses, @RequestBody AddCommentRequestDTO comment){
+    public ArticleResponseDTO postComment(HttpSession ses, @RequestBody CommentAddRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addComment(loggedUser, comment);
     }
 
     @PostMapping("comments/replies")
-    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody AddCommentReplyRequestDTO reply){
+    public ArticleResponseDTO replyToComment(HttpSession ses, @RequestBody CommentAddReplyRequestDTO reply){
         User loggedUser = sessionManager.getLoggedUser(ses);
         return commentService.addCommentReply(loggedUser, reply);
     }
@@ -49,7 +49,7 @@ public class CommentController extends AbstractController{
     }
 
     @PutMapping("/comments")
-    public ArticleResponseDTO editComment(HttpSession ses, @RequestBody EditCommentRequestDTO comment){
+    public ArticleResponseDTO editComment(HttpSession ses, @RequestBody CommentEditRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         if(commentService.userOwnsComment(loggedUser.getId(), comment.getId())){
             return commentService.editComment(comment);

@@ -5,14 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @Component
-public class RegisterRequestUserDTO {
+public class UserLoginRequestDTO {
 
     private String username;
     private String password;
-    private String confirmPassword;
-    private String email;
+
 }

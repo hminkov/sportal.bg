@@ -5,16 +5,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.PagedSearchRequestDTO;
+import sportal.model.dto.ArticleResponseWithoutComDTO;
 import sportal.model.pojo.Article;
+import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IUserRepository;
+import sportal.util.OptionalResultVerifier;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -38,10 +38,20 @@ public class ArticleDAO {
     private final String SELECT_DISLIKES_QUERY = "SELECT uda.user_id, uda.article_id FROM users_dislike_articles AS uda " +
             "WHERE uda.user_id = ? AND uda.article_id = ?";
     private final String TOP_FIVE_ARTICLES =
-            "SELECT id, heading, article_text, views " +
+            "SELECT id " +
                     "FROM articles " +
                     "ORDER BY views DESC LIMIT 5;";
-    private final String SEARCH_FOR_HEADING = "SELECT id, heading FROM articles WHERE heading LIKE ? LIMIT ? OFFSET ?";
+    private final String ARTICLES_BY_CATEGORY =
+            "SELECT a.id, a.heading, a.text, a.post_date, a.views, a.author_id AS author, a.category_id AS category " +
+                    "FROM articles AS a " +
+                    "JOIN article_categories AS ac " +
+                    "ON a.category_id = ac.id " +
+                    "WHERE ac.id = ? " +
+                    "ORDER BY a.post_date DESC LIMIT ? OFFSET ?;";
+    private final String SEARCH_FOR_HEADING =
+            "SELECT id, heading " +
+                    "FROM articles " +
+                    "WHERE heading LIKE ? LIMIT ? OFFSET ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -49,6 +59,10 @@ public class ArticleDAO {
     private LikeAndDislikeDAO likeAndDislikeDAO;
     @Autowired
     private IUserRepository iUserRepository;
+    @Autowired
+    private ICategoryRepository iCategoryRepository;
+    @Autowired
+    private OptionalResultVerifier orv;
 
     public void likeArticle(int userId, int articleId) {
         if(likeAndDislikeDAO.checkIfAlreadyLikedOrAlreadyDisliked(userId, articleId, SELECT_LIKES_QUERY)){
@@ -99,6 +113,23 @@ public class ArticleDAO {
             topFiveArticles.add(article);
         }
         return topFiveArticles;
+    }
+
+    public List<ArticleResponseWithoutComDTO> articlesByCategoryId(long categoryID, int limit, int offset){
+        SqlRowSet rowSet = this.jdbcTemplate.queryForRowSet(ARTICLES_BY_CATEGORY, categoryID, limit, offset);
+        List<ArticleResponseWithoutComDTO> listOfArticles = new ArrayList<>();
+        while (rowSet.next()) {
+            Article article = new Article();
+            article.setId(rowSet.getInt("id"));
+            article.setHeading(rowSet.getString("heading"));
+            article.setText(rowSet.getString("text"));
+//            article.setPostDate(rowSet.getTimestamp("post_date"));
+            article.setViews(rowSet.getInt("views"));
+            article.setCategory(orv.verifyOptionalResult(iCategoryRepository.findById(rowSet.getInt("category"))));
+            article.setAuthor(orv.verifyOptionalResult(iUserRepository.findById(rowSet.getInt("author"))));
+            listOfArticles.add(new ArticleResponseWithoutComDTO(article));
+        }
+        return listOfArticles;
     }
 
     @SneakyThrows

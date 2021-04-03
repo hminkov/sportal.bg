@@ -4,14 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
+import sportal.model.pojo.ArticleImage;
 
-@Component
 @NoArgsConstructor
 @Getter
 @Setter
-public class EditCommentRequestDTO {
-
+@Component
+public class ImageUploadResponseDTO {
     private int id;
-    private int articleId;
-    private String text;
+
+    public ImageUploadResponseDTO(ArticleImage articleImage) {
+        this.id = articleImage.getId();
+    }
 }

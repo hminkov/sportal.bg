@@ -16,7 +16,6 @@ import sportal.model.pojo.User;
 import sportal.model.repository.IArticleRepository;
 import sportal.model.repository.ICategoryRepository;
 import sportal.model.repository.IImageRepository;
-import sportal.model.repository.IUserRepository;
 import sportal.util.OptionalResultVerifier;
 import sportal.util.Validator;
 
@@ -32,8 +31,6 @@ public class ArticleService {
     @Autowired
     private IArticleRepository articleRepository;
     @Autowired
-    private IUserRepository userRepository;
-    @Autowired
     private ICategoryRepository categoryRepository;
     @Autowired
     private IImageRepository imageRepository;
@@ -42,13 +39,13 @@ public class ArticleService {
     @Autowired
     private OptionalResultVerifier orv;
 
-    public ArticleResponseDTO postNewArticle(CreateArticleRequestDTO requestArticle, User author) {
+    public ArticleResponseDTO postNewArticle(ArticleCreateRequestDTO requestArticle, User author) {
         Validator.validateText(requestArticle.getText());
         Validator.validateText(requestArticle.getHeading());
         verifyThatImagesAreNotTaken(requestArticle);
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());
-        realArticle.setArticleText((requestArticle.getText()));
+        realArticle.setText(requestArticle.getText());
         realArticle.setAuthor(author);
         realArticle.setCategory(createNewCategoryOrReturnMatching(requestArticle.getCategory()));
         realArticle.setPostDate(LocalDateTime.now());
@@ -75,12 +72,12 @@ public class ArticleService {
         return new ArticleResponseDTO(article);
     }
 
-    public ArticleResponseDTO editArticle(EditArticleRequestDTO editedArticle, int articleId) {
+    public ArticleResponseDTO editArticle(ArticleEditRequestDTO editedArticle, int articleId) {
         Validator.validateText(editedArticle.getText());
         Validator.validateText(editedArticle.getHeading());
         Article ogArticle = orv.verifyOptionalResult(articleRepository.findById(articleId));
         ogArticle.setHeading(editedArticle.getHeading());
-        ogArticle.setArticleText(editedArticle.getText());
+        ogArticle.setText(editedArticle.getText());
         String editedCategoryName = editedArticle.getCategory();
         if(!ogArticle.getCategory().getName().equals(editedCategoryName)){
             ogArticle.setCategory(createNewCategoryOrReturnMatching(editedCategoryName));
@@ -162,28 +159,28 @@ public class ArticleService {
 
     public List<ArticleResponseWithoutComDTO> getTopFiveMostViewed() {
         List<Article> articles = articleDAO.topFiveMostViewedArticles();
+        List<ArticleResponseWithoutComDTO> articleResponseWithoutComDTO = new ArrayList<>();
         if(articles.size() > 0) {
-            List<ArticleResponseWithoutComDTO> articleResponseWithoutComDTO = new ArrayList<>();
             for (Article a : articles) {
                 Optional<Article> articleById = articleRepository.findById(a.getId());
                 articleById.ifPresent(article -> articleResponseWithoutComDTO.add(new ArticleResponseWithoutComDTO(article)));
             }
             return articleResponseWithoutComDTO;
         }
-        throw new NotFoundException("No articles found");
+        return articleResponseWithoutComDTO;
     }
 
-    public ArticleCategoryDTO articleByCategory(int catID, int page, int resultsPerPage) {
+    public List<ArticleResponseWithoutComDTO> articleByCategory(int catID, int page, int resultsPerPage) {
         Optional<ArticleCategory> categoryOptional = categoryRepository.findById(catID);
         if(categoryOptional.isPresent()){
-            return new ArticleCategoryDTO(categoryOptional.get(), page, resultsPerPage);
+            return articleDAO.articlesByCategoryId(catID,page,resultsPerPage);
         }
         else{
             throw new NotFoundException("Category not found");
         }
     }
 
-    private void verifyThatImagesAreNotTaken(CreateArticleRequestDTO requestArticle) {
+    private void verifyThatImagesAreNotTaken(ArticleCreateRequestDTO requestArticle) {
         for(int imageId : requestArticle.getImageIds()){
             ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(imageId));
             if(image.getArticle() != null){

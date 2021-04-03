@@ -6,21 +6,19 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 import sportal.model.pojo.User;
 
-
+@NoArgsConstructor
 @Setter
 @Getter
-@NoArgsConstructor
 @Component
-public class LoginResponseUserDTO {
+public class UserRegisterResponseDTO {
 
     private int id;
     private String username;
     private String email;
-    private String loginConfirmation = "You successfully logged in!";
 
-    public LoginResponseUserDTO(User u) {
-        id = u.getId();
-        username = u.getUsername();
-        email = u.getEmail();
+    public UserRegisterResponseDTO(User user){
+        id = user.getId();
+        username = user.getUsername();
+        email = user.getEmail();
     }
 }

@@ -5,14 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
-@NoArgsConstructor
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
 @Component
-public class EditArticleRequestDTO {
-
-    private int id;
-    private String heading;
-    private String text;
-    private String category;
+public class UserLogoutDTO {
+    private String msg = "Logout Successful";
 }

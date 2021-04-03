@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sportal.model.dto.RegisterRequestUserDTO;
+import sportal.model.dto.UserRegisterRequestDTO;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -73,7 +73,7 @@ public class User extends POJO{
     @JsonBackReference
     private List<Role> roles;
 
-    public User(RegisterRequestUserDTO userDTO){
+    public User(UserRegisterRequestDTO userDTO){
         username = userDTO.getUsername();
         password = userDTO.getPassword();
         email = userDTO.getEmail();

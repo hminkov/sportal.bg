@@ -6,13 +6,11 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 @Component
-public class CreateArticleRequestDTO {
+public class CommentAddReplyRequestDTO {
 
-    private String category;
-    private String heading;
+    private int parentCommentId;
     private String text;
-    private int[] imageIds;
 }

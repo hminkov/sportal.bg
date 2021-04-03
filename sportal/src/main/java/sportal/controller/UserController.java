@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import sportal.exceptions.BadRequestException;
-import sportal.model.dto.LoginRequestUserDTO;
-import sportal.model.dto.LoginResponseUserDTO;
-import sportal.model.dto.RegisterRequestUserDTO;
-import sportal.model.dto.RegisterResponseUserDTO;
+import sportal.model.dto.UserLoginRequestDTO;
+import sportal.model.dto.UserLoginResponseDTO;
+import sportal.model.dto.UserRegisterRequestDTO;
+import sportal.model.dto.UserRegisterResponseDTO;
 import sportal.model.pojo.User;
 import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.DBException;
@@ -29,7 +29,7 @@ public class UserController extends AbstractController{
     private SessionManager sessionManager;
 
     @PostMapping("/users")
-    public RegisterResponseUserDTO register(@RequestBody RegisterRequestUserDTO userDTO, HttpSession ses){
+    public UserRegisterResponseDTO register(@RequestBody UserRegisterRequestDTO userDTO, HttpSession ses){
         if(sessionManager.userAlreadyLogged(ses)){
             throw new BadRequestException("Trying to register while already logged");
         }
@@ -37,17 +37,17 @@ public class UserController extends AbstractController{
     }
 
     @PostMapping("/users/login")
-    public LoginResponseUserDTO login(@RequestBody LoginRequestUserDTO userDTO, HttpSession ses){
+    public UserLoginResponseDTO login(@RequestBody UserLoginRequestDTO userDTO, HttpSession ses){
         if(sessionManager.userAlreadyLogged(ses)){
             throw new BadRequestException("Already logged");
         }
-        LoginResponseUserDTO responseDto = userService.loginUser(userDTO);
+        UserLoginResponseDTO responseDto = userService.loginUser(userDTO);
         sessionManager.loginUser(ses, responseDto.getId());
         return responseDto;
     }
 
     @PostMapping("/users/logout")
-    public LogoutUserDTO logout(HttpSession ses){
+    public UserLogoutDTO logout(HttpSession ses){
         return sessionManager.logoutUser(ses);
     }
 
@@ -106,7 +106,7 @@ public class UserController extends AbstractController{
     }
 
     @PutMapping("/users/reset-password")
-    public void resetPassword(@RequestBody LoginRequestUserDTO request){
+    public void resetPassword(@RequestBody UserLoginRequestDTO request){
         userService.resetPassword(request.getUsername());
     }
 

@@ -5,13 +5,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 
+@Component
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-@Component
-public class LoginRequestUserDTO {
+public class CommentEditRequestDTO {
 
-    private String username;
-    private String password;
-
+    private int id;
+    private int articleId;
+    private String text;
 }
