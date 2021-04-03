@@ -54,6 +54,11 @@ public class ArticleController extends AbstractController{
         return articleService.articleByCategory(id, pagesDTO.getPage(), pagesDTO.getResultsPerPage());
     }
 
+    @GetMapping("/articles/latest")
+    public List<ArticleResponseWithoutComDTO> latestArticles(){
+        return articleService.latestArticles();
+    }
+
     @GetMapping("/articles/top5")
     public List<ArticleResponseWithoutComDTO> topFiveMostViewedArticles(){
         return articleService.getTopFiveMostViewed();

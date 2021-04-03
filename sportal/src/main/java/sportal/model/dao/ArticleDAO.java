@@ -123,7 +123,7 @@ public class ArticleDAO {
             article.setId(rowSet.getInt("id"));
             article.setHeading(rowSet.getString("heading"));
             article.setText(rowSet.getString("text"));
-//            article.setPostDate(rowSet.getTimestamp("post_date"));
+//            article.setPostDate(rowSet.getTimestamp("post_date").toLocalDateTime());
             article.setViews(rowSet.getInt("views"));
             article.setCategory(orv.verifyOptionalResult(iCategoryRepository.findById(rowSet.getInt("category"))));
             article.setAuthor(orv.verifyOptionalResult(iUserRepository.findById(rowSet.getInt("author"))));

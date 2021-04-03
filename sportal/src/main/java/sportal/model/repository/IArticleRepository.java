@@ -15,4 +15,5 @@ import java.util.List;
 public interface IArticleRepository extends JpaRepository<Article, Integer> {
 
     Page<Article> findArticlesByAuthor_UsernameContaining(String username, Pageable pageable);
+    List<Article> findByOrderByPostDateDesc();
 }

@@ -24,6 +24,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleService {
@@ -156,7 +157,17 @@ public class ArticleService {
         }
         return articleResults;
     }
-
+    public List<ArticleResponseWithoutComDTO>latestArticles(){
+        List<Article> articlesByDate = articleRepository.findByOrderByPostDateDesc()
+                .stream()
+                .limit(5)
+                .collect(Collectors.toList());
+        List<ArticleResponseWithoutComDTO> latestArticles = new ArrayList<>();
+        for(Article a : articlesByDate){
+            latestArticles.add(new ArticleResponseWithoutComDTO(a));
+        }
+        return latestArticles;
+    }
     public List<ArticleResponseWithoutComDTO> getTopFiveMostViewed() {
         List<Article> articles = articleDAO.topFiveMostViewedArticles();
         List<ArticleResponseWithoutComDTO> articleResponseWithoutComDTO = new ArrayList<>();
