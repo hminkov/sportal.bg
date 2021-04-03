@@ -105,6 +105,17 @@ public class UserController extends AbstractController{
         }
     }
 
+
+    @GetMapping("/users/comments")
+    public List<UserWithCommentsDTO> getAllUsersWithComments(HttpSession ses) {
+        User loggedUser = sessionManager.getLoggedUser(ses);
+        if (userIsAdmin(loggedUser)) {
+            return userService.getAllUsersWithComments();
+        } else {
+            throw new AuthenticationException("Request requires admin privileges");
+        }
+    }
+
     @PutMapping("/users/reset-password")
     public void resetPassword(@RequestBody UserLoginRequestDTO request){
         userService.resetPassword(request.getUsername());

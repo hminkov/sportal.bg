@@ -82,6 +82,17 @@ public class UserService {
         return userIDResponseDTO;
     }
 
+
+
+    public List<UserWithCommentsDTO> getAllUsersWithComments() {
+        List<User> users = userRepository.findAllWithComments();
+        List<UserWithCommentsDTO> userWithCommentsDTO = new ArrayList<>();
+        for(User u : users){
+            userWithCommentsDTO.add(new UserWithCommentsDTO(u));
+        }
+        return userWithCommentsDTO;
+    }
+
     public UserLoginResponseDTO loginUser(UserLoginRequestDTO dto) {
         Optional<User> optionalUser = userRepository.findByUsername(dto.getUsername());
         if(optionalUser.isEmpty()){
