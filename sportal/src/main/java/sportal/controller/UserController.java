@@ -19,6 +19,7 @@ import sportal.service.UserService;
 import sportal.util.SessionManager;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
 

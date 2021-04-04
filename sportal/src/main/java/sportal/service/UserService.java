@@ -118,16 +118,13 @@ public class UserService {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             if (encoder.matches(userDTO.getPassword(), userBefore.getPassword())) {
                 //validate if username or email already exists
-                List<User> users = userRepository.findAll();
-                for(User user : users){
-                    if(user.getEmail().equals(userDTO.getEmail())){
-                        throw new BadRequestException("Email already exists");
-                    }
-                    if(user.getUsername().equals(userDTO.getUsername())){
-                        throw new BadRequestException("Username already exists");
-                    }
+                if(userRepository.existsByEmail(userDTO.getEmail())){
+                    throw new BadRequestException("Email already exists");
                 }
-                //check if email format is correct or if such email exists
+                if(userRepository.existsByUsername(userDTO.getUsername())){
+                    throw new BadRequestException("Username already exists");
+                }
+//                check if email format is correct or if such email exists
                 if(userDTO.getEmail() != null) {
                     Validator.emailFormatValidator(userDTO.getEmail());
                     userUpdate.setEmail(userDTO.getEmail());
@@ -137,16 +134,18 @@ public class UserService {
                     Validator.validateUsername(userDTO.getUsername());
                     userUpdate.setUsername(userDTO.getUsername());
                 }
-                //validate password format and change
-                if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
-                    if(!userDTO.getNewPassword().equals(userBefore.getPassword())) {
-                        Validator.passwordFormatValidator(userDTO.getNewPassword());
-                        userUpdate.setPassword(encoder.encode(userDTO.getNewPassword()));
-                    }else{
-                        throw new BadRequestException("Your new password should not be the same as the old one! Try again");
+//                validate password format and change
+                if(userDTO.getNewPassword() != null) {
+                    if (userDTO.getNewPassword().equals(userDTO.getConfirmationPassword())) {
+                        if (!userDTO.getNewPassword().equals(userBefore.getPassword())) {
+                            Validator.passwordFormatValidator(userDTO.getNewPassword());
+                            userUpdate.setPassword(encoder.encode(userDTO.getNewPassword()));
+                        } else {
+                            throw new BadRequestException("Your new password should not be the same as the old one! Try again");
+                        }
+                    } else {
+                        throw new BadRequestException("Entered passwords must match!");
                     }
-                } else {
-                    throw new BadRequestException("Entered passwords must match!");
                 }
                 UserWithoutPasswordResponseDTO currentUser = new UserWithoutPasswordResponseDTO(userUpdate);
                 userRepository.save(userUpdate);

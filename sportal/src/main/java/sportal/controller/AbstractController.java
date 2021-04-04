@@ -4,9 +4,9 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
 import sportal.SportalApplication;
 import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.BadRequestException;
@@ -16,8 +16,9 @@ import sportal.model.dto.ErrorDTO;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 
-@RestController
+@ControllerAdvice
 public class AbstractController {
 
 
@@ -27,7 +28,7 @@ public class AbstractController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleBadRequest(BadRequestException e){
         log(e);
-        return new ErrorDTO(e.getMessage() + " - error " + HttpStatus.BAD_REQUEST);
+        return new ErrorDTO(new Date(),HttpStatus.BAD_REQUEST.toString(),e.getMessage());
     }
 
 
@@ -35,28 +36,28 @@ public class AbstractController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFound(NotFoundException e){
         log(e);
-        return new ErrorDTO(e.getMessage() + " - error " + HttpStatus.NOT_FOUND);
+        return new ErrorDTO(new Date(),HttpStatus.NOT_FOUND.toString(),e.getMessage());
     }
 
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorDTO handleNotAuthorized(AuthenticationException e){
         log(e);
-        return new ErrorDTO(e.getMessage()  + " - error " + HttpStatus.UNAUTHORIZED);
+        return new ErrorDTO(new Date(),HttpStatus.UNAUTHORIZED.toString(),e.getMessage());
     }
 
     @ExceptionHandler(WrongCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleWrongCredentials(WrongCredentialsException e){
         log(e);
-        return new ErrorDTO(e.getMessage()  + " - error " + HttpStatus.BAD_REQUEST);
+        return new ErrorDTO(new Date(),HttpStatus.BAD_REQUEST.toString(),e.getMessage());
     }
 
     @ExceptionHandler(SQLException.class)
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
     public ErrorDTO handleSQL(SQLException e){
         log(e);
-        return new ErrorDTO(e.getMessage()  + " - error " + HttpStatus.BAD_REQUEST);
+        return new ErrorDTO(new Date(),HttpStatus.SERVICE_UNAVAILABLE.toString(),e.getMessage());
     }
 
     protected void log(Exception e) {

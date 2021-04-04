@@ -39,18 +39,18 @@ public class ArticleController extends AbstractController{
         return articleService.getArticleById(id);
     }
 
-    @GetMapping("/articles/authors")
-    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(@RequestBody ArticleSerchByAuthorRequestDTO searchRq){
-        return articleService.getArticlesByAuthor(searchRq.getUsername(), searchRq.getPage(), searchRq.getResultsPerPage());
+    @PutMapping("/articles/authors")
+    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(@RequestBody ArticleSeаrchByAuthorRequestDTO pagesDTO){
+        return articleService.getArticlesByAuthor(pagesDTO);
     }
 
-    @GetMapping("/articles/by-name")
+    @PutMapping("/articles/title")
     public List<ArticleHeadingResponseDTO> getArticleByHeading(@RequestBody ArticleHeadingSearchRequestDTO articleRequest){
         return articleService.getArticleByName(articleRequest);
     }
 
-    @GetMapping("/categories/{id}")
-    public List<ArticleResponseWithoutComDTO> getArticleByCategory(@PathVariable int id, @RequestBody PagedSearchRequestDTO pagesDTO){
+    @PutMapping("/categories/{id}")
+    public List<ArticleResponseWithoutComDTO> getArticleByCategory(@PathVariable int id,@RequestBody PagedSearchRequestDTO pagesDTO){
         return articleService.articleByCategory(id, pagesDTO.getPage(), pagesDTO.getResultsPerPage());
     }
 
@@ -64,9 +64,9 @@ public class ArticleController extends AbstractController{
         return articleService.getTopFiveMostViewed();
     }
 
-    @GetMapping("/articles")
-    public List<ArticleHeadingResponseDTO> getAllArticleTitles(@RequestBody PagedSearchRequestDTO pageRequest){
-        return articleService.getAllArticles(pageRequest);
+    @PutMapping("/articles/all")
+    public List<ArticleHeadingResponseDTO> getAllArticles(@RequestBody PagedSearchRequestDTO pagesDTO){
+        return articleService.getAllArticles(pagesDTO);
     }
 
     @PutMapping("/articles")
