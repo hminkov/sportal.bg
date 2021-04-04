@@ -1,5 +1,6 @@
 package sportal.controller;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,13 @@ import sportal.exceptions.WrongCredentialsException;
 import sportal.model.dto.ErrorDTO;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 
 @RestController
 public class AbstractController {
 
 
-    private static final Logger LOGGER = LogManager.getLogger(SportalApplication.class);
+    protected static final Logger LOGGER = LogManager.getLogger(SportalApplication.class);
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -57,8 +59,12 @@ public class AbstractController {
         return new ErrorDTO(e.getMessage()  + " - error " + HttpStatus.BAD_REQUEST);
     }
 
-    private void log(Exception e) {
-        LOGGER.error(e.getMessage());
-        LOGGER.trace(e.getStackTrace());
+    protected void log(Exception e) {
+        StackTraceElement[] stackTraceElements = e.getStackTrace();
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < stackTraceElements.length; i++) {
+            str.append(Arrays.toString(stackTraceElements) + " ");
+        }
+        LOGGER.log(Level.ALL, String.valueOf(str));
     }
 }

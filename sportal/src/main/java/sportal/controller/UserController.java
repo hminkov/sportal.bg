@@ -1,8 +1,11 @@
 package sportal.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
+import sportal.SportalApplication;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dto.UserLoginRequestDTO;
 import sportal.model.dto.UserLoginResponseDTO;
@@ -78,6 +81,7 @@ public class UserController extends AbstractController{
                 ses.invalidate();
                 return deletedUser;
             } catch (SQLException e) {
+                log(e);
                 throw new DBException("Something went wrong");
             }
         }
