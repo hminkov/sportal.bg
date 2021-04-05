@@ -80,9 +80,9 @@ public class ArticleController extends AbstractController{
     }
 
     @DeleteMapping("/articles")
-    public void deleteArticle(@RequestBody DeleteEntityRequestDTO article, HttpSession ses){
+    public DeleteEntityResponseDTO deleteArticle(@RequestBody DeleteEntityRequestDTO article, HttpSession ses){
         if(isAdmin(sessionManager.getLoggedUser(ses))){
-            articleService.deleteArticle(article.getId());
+            return new DeleteEntityResponseDTO(articleService.deleteArticle(article.getId()));
         }
         else{
             throw new AuthenticationException("Requires admin privileges");

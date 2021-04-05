@@ -38,10 +38,10 @@ public class CommentController extends AbstractController{
     }
 
     @DeleteMapping("/comments")
-    public ArticleResponseDTO deleteComment(HttpSession ses, @RequestBody DeleteEntityRequestDTO comment){
+    public DeleteEntityResponseDTO deleteComment(HttpSession ses, @RequestBody DeleteEntityRequestDTO comment){
         User loggedUser = sessionManager.getLoggedUser(ses);
         if(userController.userIsAdmin(loggedUser) || userOwnsComment(loggedUser.getId(), comment.getId())){
-            return commentService.deleteComment(comment.getId());
+            return new DeleteEntityResponseDTO(commentService.deleteComment(comment.getId()));
         }
         else{
             throw new BadRequestException("You can only delete your own comments");

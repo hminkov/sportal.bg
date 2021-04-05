@@ -21,7 +21,7 @@ public class ArticleResponseDTO {
     private int views;
     private UserWithoutPasswordResponseDTO author;
     private ArticleCategory category;
-    private List<CommentResponseDTO> commentDtos;
+    private List<CommentResponseDTO> comments;
     private int[] imageIds;
     private int likes;
     private int dislikes;
@@ -33,10 +33,10 @@ public class ArticleResponseDTO {
         text = article.getText();
         category = article.getCategory();
         views = article.getViews();
-        commentDtos = new ArrayList<>();
+        comments = new ArrayList<>();
         List<Comment> comments = commentWithoutParents(article.getComments());
         for(Comment comment : comments){
-            commentDtos.add(new CommentResponseDTO(comment));
+            this.comments.add(new CommentResponseDTO(comment));
         }
         imageIds = extractImageIds(article.getImages());
         likes = article.getLikes().size();

@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import sportal.model.pojo.User;
 
+import java.util.Properties;
+
 @Component
 public class EmailService{
 
@@ -27,16 +29,17 @@ public class EmailService{
 
     }
 
-    public void sendForgotPasswordMail(String username) {
+    public String sendForgotPasswordMail(String email) {
         JavaMailSenderImpl mailSender = getMailSender();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("sportalProject@gmail.com");
-        mailMessage.setTo("sportalProject@gmail.com");
+        mailMessage.setTo(email);
         mailMessage.setSubject("registration notice");
         mailMessage.setText("Life is hard without a password.");
 
         mailSender.send(mailMessage);
+        return "Mail sent to " + email;
     }
 
     private JavaMailSenderImpl getMailSender() {
@@ -45,6 +48,12 @@ public class EmailService{
         mailSender.setPort(this.emailCfg.getPort());
         mailSender.setUsername(this.emailCfg.getUsername());
         mailSender.setPassword(this.emailCfg.getPassword());
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
         return mailSender;
     }
 }

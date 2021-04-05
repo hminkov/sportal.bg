@@ -65,11 +65,10 @@ public class CommentService {
         return comment.getUser().getId() == userId;
     }
 
-    public ArticleResponseDTO deleteComment(int commentId) {
+    public int deleteComment(int commentId) {
         Comment comment = orv.verifyOptionalResult(commentRepository.findById(commentId));
-        int articleId = comment.getArticle().getId();
         commentRepository.delete(comment);
-        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(articleId)));
+        return commentId;
     }
 
     public ArticleResponseDTO editComment(CommentEditRequestDTO editedComment) {

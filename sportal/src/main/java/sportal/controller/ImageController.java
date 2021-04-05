@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.DeleteEntityRequestDTO;
+import sportal.model.dto.DeleteEntityResponseDTO;
 import sportal.model.dto.ImageUploadResponseDTO;
 import sportal.model.pojo.ArticleImage;
 import sportal.model.pojo.User;
@@ -53,10 +54,10 @@ public class ImageController extends AbstractController{
     }
 
     @DeleteMapping("/images")
-    public void deleteImage(@RequestBody DeleteEntityRequestDTO deleteRq, HttpSession ses){
+    public DeleteEntityResponseDTO deleteImage(@RequestBody DeleteEntityRequestDTO deleteRq, HttpSession ses){
         User loggedUser = sessionManager.getLoggedUser(ses);
         if(userController.userIsAdmin(loggedUser)){
-            imageService.deleteImage(deleteRq.getId());
+            return new DeleteEntityResponseDTO(imageService.deleteImage(deleteRq.getId()));
         }
         else{
             throw new AuthenticationException("Deleting images requires admin privileges");
