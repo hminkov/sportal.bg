@@ -21,6 +21,7 @@ import sportal.util.EmailService;
 import sportal.util.OptionalResultVerifier;
 import sportal.util.Validator;
 
+import javax.persistence.EntityManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,8 @@ public class UserService {
     private EmailService emailService;
     @Autowired
     private OptionalResultVerifier orv;
+    @Autowired
+    EntityManager entityManager;
 
 
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO){
@@ -164,6 +167,7 @@ public class UserService {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             if (encoder.matches(userDTO.getPassword(), user.getPassword())) {
                 userDao.deleteUser(user.getId());
+                entityManager.detach(user);
             }else{
                 throw new WrongCredentialsException("Passwords does not match. Try again!");
             }
