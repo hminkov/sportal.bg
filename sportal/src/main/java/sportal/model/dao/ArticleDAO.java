@@ -115,29 +115,37 @@ public class ArticleDAO {
         return topFiveArticles;
     }
 
-    public List<ArticleResponseWithoutComDTO> articlesByCategoryId(long categoryID, int page, int resultsPerPage){
-        SqlRowSet rowSet = this.jdbcTemplate.queryForRowSet(ARTICLES_BY_CATEGORY, categoryID, resultsPerPage, (page-1)*resultsPerPage);
+    public List<ArticleResponseWithoutComDTO> articlesByCategoryId(int categoryID, int page, int resultsPerPage){
         List<ArticleResponseWithoutComDTO> listOfArticles = new ArrayList<>();
-        while (rowSet.next()) {
-            Article article = new Article();
-            article.setId(rowSet.getInt("id"));
-            article.setHeading(rowSet.getString("heading"));
-            article.setText(rowSet.getString("text"));
-//            article.setPostDate(rowSet.getTimestamp("post_date").toLocalDateTime());
-            article.setViews(rowSet.getInt("views"));
-            article.setCategory(orv.verifyOptionalResult(iCategoryRepository.findById(rowSet.getInt("category"))));
-            article.setAuthor(orv.verifyOptionalResult(iUserRepository.findById(rowSet.getInt("author"))));
-            listOfArticles.add(new ArticleResponseWithoutComDTO(article));
+        try(     Connection connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ARTICLES_BY_CATEGORY)) {
+            ps.setInt(1, categoryID);
+            ps.setInt(2, resultsPerPage);
+            ps.setInt(3,(page-1)*resultsPerPage);
+            ResultSet rowSet = ps.executeQuery();
+            while (rowSet.next()) {
+                Article article = new Article();
+                article.setId(rowSet.getInt("id"));
+                article.setHeading(rowSet.getString("heading"));
+                article.setText(rowSet.getString("text"));
+                article.setPostDate(rowSet.getTimestamp("post_date").toLocalDateTime());
+                article.setViews(rowSet.getInt("views"));
+                article.setCategory(orv.verifyOptionalResult(iCategoryRepository.findById(rowSet.getInt("category"))));
+                article.setAuthor(orv.verifyOptionalResult(iUserRepository.findById(rowSet.getInt("author"))));
+                listOfArticles.add(new ArticleResponseWithoutComDTO(article));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return listOfArticles;
     }
 
-    @SneakyThrows
     public List<Article> getArticleByHeading(String articleHeading, Pageable pageable){
         List<Article> articlesByHeading = new ArrayList<>();
-        Connection connection = jdbcTemplate.getDataSource().getConnection();
+
         int offset = pageable.getPageNumber()*pageable.getPageSize();
-        try(PreparedStatement ps = connection.prepareStatement(SEARCH_FOR_HEADING)){
+        try(    Connection connection = jdbcTemplate.getDataSource().getConnection();
+                PreparedStatement ps = connection.prepareStatement(SEARCH_FOR_HEADING)){
             ps.setString(1, "%" + articleHeading +"%");
             ps.setInt(2, pageable.getPageSize());
             ps.setInt(3, offset);

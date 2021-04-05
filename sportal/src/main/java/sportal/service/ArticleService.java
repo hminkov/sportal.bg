@@ -92,6 +92,7 @@ public class ArticleService {
 
     private ArticleCategory createNewCategoryOrReturnMatching(String categoryName){
         Validator.validateText(categoryName);
+        categoryName = categoryName.toLowerCase();
         if(categoryRepository.findByName(categoryName).isEmpty()){
             ArticleCategory newCategory = new ArticleCategory();
             newCategory.setName(categoryName);
@@ -100,9 +101,10 @@ public class ArticleService {
         return orv.verifyOptionalResult(categoryRepository.findByName(categoryName));
     }
 
-    public void deleteArticle(int articleId) {
+    public int deleteArticle(int articleId) {
         Article article = orv.verifyOptionalResult(articleRepository.findById(articleId));
         articleRepository.delete(article);
+        return article.getId();
     }
 
     public Article likeArticle(int userId, int articleId) {

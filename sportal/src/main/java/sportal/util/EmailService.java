@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import sportal.model.pojo.User;
 
+import java.util.Properties;
+
 @Component
 public class EmailService{
 
@@ -45,6 +47,12 @@ public class EmailService{
         mailSender.setPort(this.emailCfg.getPort());
         mailSender.setUsername(this.emailCfg.getUsername());
         mailSender.setPassword(this.emailCfg.getPassword());
+
+        Properties props = mailSender.getJavaMailProperties();
+        props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.debug", "true");
         return mailSender;
     }
 }

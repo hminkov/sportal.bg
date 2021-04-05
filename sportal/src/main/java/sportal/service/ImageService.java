@@ -55,10 +55,11 @@ public class ImageService {
         new Thread(thread).start();
     }
 
-    public void deleteImage(int imageId) {
+    public int deleteImage(int imageId) {
         ArticleImage image = orv.verifyOptionalResult(imageRepository.findById(imageId));
         imageRepository.delete(image);
         File f = new File(image.getUrl());
         f.delete();
+        return image.getId();
     }
 }
