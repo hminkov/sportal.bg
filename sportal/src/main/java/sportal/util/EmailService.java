@@ -19,9 +19,9 @@ public class EmailService{
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("sportalProject@gmail.com");
-        mailMessage.setTo("sportalProject@gmail.com");
+        mailMessage.setTo(user.getEmail());
         mailMessage.setSubject("registration notice");
-        mailMessage.setText("You have registered in our web service project");
+        mailMessage.setText("You have registered in our web service project with the username " + user.getUsername());
 
         mailSender.send(mailMessage);
 
