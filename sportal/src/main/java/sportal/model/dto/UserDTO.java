@@ -10,9 +10,11 @@ import org.springframework.stereotype.Component;
 @Getter
 @Component
 public class UserDTO {
+
     private String username;
     private String email;
     private String password;
     private String newPassword;
     private String confirmationPassword;
+
 }

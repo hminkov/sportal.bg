@@ -15,4 +15,5 @@ public class ArticleEditRequestDTO {
     private String heading;
     private String text;
     private String category;
+
 }

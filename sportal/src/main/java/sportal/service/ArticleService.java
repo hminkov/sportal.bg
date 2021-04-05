@@ -130,6 +130,7 @@ public class ArticleService {
     }
 
     public List<ArticleHeadingResponseDTO> getAllArticles(PagedSearchRequestDTO pageRequest) {
+        Validator.validatePaging(pageRequest.getPage(),pageRequest.getResultsPerPage());
         Page<Article> articles = articleRepository.findAll(PageRequest.of(pageRequest.getPage(), pageRequest.getResultsPerPage()));
         List<ArticleHeadingResponseDTO> articleByHeadingDTO = new ArrayList<>();
         for(Article a : articles){
@@ -138,10 +139,11 @@ public class ArticleService {
         return articleByHeadingDTO;
     }
 
-    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(String username, int page, int resultsPerPage) {
+    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(ArticleSeаrchByAuthorRequestDTO pageRequest) {
+        Validator.validatePaging(pageRequest.getPage(),pageRequest.getResultsPerPage());
         List<ArticleHeadingResponseDTO> articleResponse = new ArrayList<>();
-        Pageable pageable = PageRequest.of(page, resultsPerPage);
-        Page<Article> articles = articleRepository.findArticlesByAuthor_UsernameContaining(username, pageable);
+        Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getResultsPerPage());
+        Page<Article> articles = articleRepository.findArticlesByAuthor_UsernameContaining(pageRequest.getUsername(), pageable);
         for(Article a : articles){
             articleResponse.add(new ArticleHeadingResponseDTO(a));
         }
@@ -149,6 +151,7 @@ public class ArticleService {
     }
 
     public List<ArticleHeadingResponseDTO> getArticleByName(ArticleHeadingSearchRequestDTO articleSearchRequest){
+        Validator.validatePaging(articleSearchRequest.getPage(),articleSearchRequest.getResultsPerPage());
         Pageable pageable = PageRequest.of(articleSearchRequest.getPage(), articleSearchRequest.getResultsPerPage());
         List<Article> articles = articleDAO.getArticleByHeading(articleSearchRequest.getHeading(), pageable);
         List<ArticleHeadingResponseDTO> articleResults = new ArrayList<>();

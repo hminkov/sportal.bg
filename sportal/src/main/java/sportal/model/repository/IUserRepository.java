@@ -16,6 +16,9 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
 
     Optional<User> findByUsername(String username);
 
+    Boolean existsByEmail(String email);
+    Boolean existsByUsername(String username);
+
     @Query("SELECT user FROM User user JOIN Comment comment ON user.id = comment.user.id")
     List<User> findAllWithComments();
 }
