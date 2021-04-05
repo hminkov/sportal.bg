@@ -141,13 +141,13 @@ public class ArticleService {
         return articleByHeadingDTO;
     }
 
-    public List<ArticleHeadingResponseDTO> getArticlesByAuthor(ArticleSeаrchByAuthorRequestDTO pageRequest) {
+    public List<ArticleSearchByAuthorResponseDTO> getArticlesByAuthor(ArticleSeаrchByAuthorRequestDTO pageRequest) {
         Validator.validatePaging(pageRequest.getPage(),pageRequest.getResultsPerPage());
-        List<ArticleHeadingResponseDTO> articleResponse = new ArrayList<>();
+        List<ArticleSearchByAuthorResponseDTO> articleResponse = new ArrayList<>();
         Pageable pageable = PageRequest.of(pageRequest.getPage(), pageRequest.getResultsPerPage());
         Page<Article> articles = articleRepository.findArticlesByAuthor_UsernameContaining(pageRequest.getUsername(), pageable);
         for(Article a : articles){
-            articleResponse.add(new ArticleHeadingResponseDTO(a));
+            articleResponse.add(new ArticleSearchByAuthorResponseDTO(a));
         }
         return articleResponse;
     }

@@ -35,7 +35,7 @@ public class EmailService{
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("sportalProject@gmail.com");
         mailMessage.setTo(email);
-        mailMessage.setSubject("registration notice");
+        mailMessage.setSubject("forgotten password");
         mailMessage.setText("Life is hard without a password.");
 
         mailSender.send(mailMessage);
