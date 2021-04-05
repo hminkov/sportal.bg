@@ -43,6 +43,9 @@ public class ArticleService {
     public ArticleResponseDTO postNewArticle(ArticleCreateRequestDTO requestArticle, User author) {
         Validator.validateText(requestArticle.getText());
         Validator.validateText(requestArticle.getHeading());
+        if(requestArticle.getImageIds().length == 0){
+            throw new BadRequestException("Cannot create an article without images");
+        }
         verifyThatImagesAreNotTaken(requestArticle);
         Article realArticle = new Article();
         realArticle.setHeading(requestArticle.getHeading());

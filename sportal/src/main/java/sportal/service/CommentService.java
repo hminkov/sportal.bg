@@ -76,7 +76,8 @@ public class CommentService {
         Validator.validateText(editedComment.getText());
         comment.setCommentText(editedComment.getText());
         commentRepository.save(comment);
-        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(editedComment.getArticleId())));
+        int articleId =  comment.getArticle().getId();
+        return new ArticleResponseDTO(orv.verifyOptionalResult(articleRepository.findById(articleId)));
     }
 
     public ArticleResponseDTO addCommentReply(User loggedUser, CommentAddReplyRequestDTO reply) {

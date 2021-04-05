@@ -12,6 +12,5 @@ import org.springframework.stereotype.Component;
 public class CommentEditRequestDTO {
 
     private int id;
-    private int articleId;
     private String text;
 }

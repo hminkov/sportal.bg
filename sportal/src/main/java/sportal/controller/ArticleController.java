@@ -41,7 +41,7 @@ public class ArticleController extends AbstractController{
 
     @PutMapping("/articles/authors")
     public List<ArticleSearchByAuthorResponseDTO> getArticlesByAuthor(@RequestBody ArticleSeаrchByAuthorRequestDTO pagesDTO){
-        return articleService.getArticlesByAuthor(pagesDTO);//TODO add user to json
+        return articleService.getArticlesByAuthor(pagesDTO);
     }
 
     @PutMapping("/articles/title")
