@@ -46,8 +46,7 @@ public class ImageController extends AbstractController{
     }
 
     @GetMapping(value = "/images/{id}", produces = "image/*")
-    public @ResponseBody
-    byte[] download(@PathVariable int id) throws IOException {
+    public byte[] download(@PathVariable int id) throws IOException {
         ArticleImage articleImage = orv.verifyOptionalResult(imageRepository.findById(id));
         String url = articleImage.getUrl();
         File pFile = new File(url);
