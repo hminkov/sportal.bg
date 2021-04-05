@@ -122,8 +122,8 @@ public class UserController extends AbstractController{
     }
 
     @PutMapping("/users/reset-password")
-    public void resetPassword(@RequestBody UserLoginRequestDTO request){
-        userService.resetPassword(request.getUsername());
+    public UserForgotPasswordResponseDTO resetPassword(@RequestBody UserForgotPasswordRequestDTO request){
+        return new UserForgotPasswordResponseDTO(userService.resetPassword(request.getEmail()));
     }
 
     public boolean userIsAdmin(User user){

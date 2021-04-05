@@ -206,7 +206,7 @@ public class UserService {
         return userDao.userIsAdmin(userBefore);
     }
 
-    public void resetPassword(String username) {
-        emailService.sendForgotPasswordMail(username);
+    public String resetPassword(String email) {
+        return emailService.sendForgotPasswordMail(email);
     }
 }

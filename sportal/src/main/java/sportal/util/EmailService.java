@@ -29,16 +29,17 @@ public class EmailService{
 
     }
 
-    public void sendForgotPasswordMail(String username) {
+    public String sendForgotPasswordMail(String email) {
         JavaMailSenderImpl mailSender = getMailSender();
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setFrom("sportalProject@gmail.com");
-        mailMessage.setTo("sportalProject@gmail.com");
+        mailMessage.setTo(email);
         mailMessage.setSubject("registration notice");
         mailMessage.setText("Life is hard without a password.");
 
         mailSender.send(mailMessage);
+        return "Mail sent to " + email;
     }
 
     private JavaMailSenderImpl getMailSender() {
