@@ -115,8 +115,8 @@ public class ArticleDAO {
         return topFiveArticles;
     }
 
-    public List<ArticleResponseWithoutComDTO> articlesByCategoryId(long categoryID, int limit, int offset){
-        SqlRowSet rowSet = this.jdbcTemplate.queryForRowSet(ARTICLES_BY_CATEGORY, categoryID, limit, offset);
+    public List<ArticleResponseWithoutComDTO> articlesByCategoryId(long categoryID, int page, int resultsPerPage){
+        SqlRowSet rowSet = this.jdbcTemplate.queryForRowSet(ARTICLES_BY_CATEGORY, categoryID, resultsPerPage, (page-1)*resultsPerPage);
         List<ArticleResponseWithoutComDTO> listOfArticles = new ArrayList<>();
         while (rowSet.next()) {
             Article article = new Article();
