@@ -42,11 +42,11 @@ public class Validator {
     }
 
     public static void validatePaging(int page, int result){
-        if(page < 0){
-            throw new BadRequestException("Page should be greater than 0");
+        if(page < 1){
+            throw new BadRequestException("Result should be a positive number");
         }
-        if(result < 0){
-            throw new BadRequestException("Result should be greater than 0");
+        if(result < 1){
+            throw new BadRequestException("Result should be a positive number");
         }
     }
 }

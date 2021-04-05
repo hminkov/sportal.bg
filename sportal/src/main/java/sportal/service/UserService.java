@@ -169,7 +169,7 @@ public class UserService {
                 userDao.deleteUser(user.getId());
                 entityManager.detach(user);
             }else{
-                throw new WrongCredentialsException("Passwords does not match. Try again!");
+                throw new WrongCredentialsException("Invalid password!");
             }
             Optional<User> deletedUser = userRepository.findById(user.getId());
             return new UserWithoutPasswordResponseDTO(deletedUser.get());

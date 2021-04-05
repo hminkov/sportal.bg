@@ -19,6 +19,6 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
     Boolean existsByEmail(String email);
     Boolean existsByUsername(String username);
 
-    @Query("SELECT user FROM User user JOIN Comment comment ON user.id = comment.user.id")
+    @Query("SELECT DISTINCT(user) FROM User user JOIN Comment comment ON user.id = comment.user.id")
     List<User> findAllWithComments();
 }

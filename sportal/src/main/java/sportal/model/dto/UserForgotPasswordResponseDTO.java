@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserForgotPasswordResponseDTO {
-    private String message;
 
+    private String message;
     public UserForgotPasswordResponseDTO(String message){
         this.message = message;
     }
