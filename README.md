@@ -1,7 +1,7 @@
 # IT Talents final project - [sportal.bg](https://github.com/hminkov/sportal.bg/blob/main/design/sportal_presentation.pdf)
 ![](design/images/sportal.jpg)
 
-Web based Java Application with a purpose of entertaiment for its users. It is created to keep the user up to date with the latest sport events of his favorite teams. Users can experience the web app either registrated where they can like, comment and share their oppinion with other or just like a regular viewer.
+Web based Java Application with a purpose of entertainment for its users. It is created to keep the user up to date with the latest sport events of his favorite teams. Users can experience the web app either registered where they can like, comment and share their opinion with other or just like a regular viewer.
 
 ## A simple colaboration between two cadets: 
 - _Hristo Minkov - 27yrs old - former architect - future Java developer_
