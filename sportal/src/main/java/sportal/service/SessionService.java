@@ -1,4 +1,4 @@
-package sportal.util;
+package sportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import sportal.model.repository.IUserRepository;
 import javax.servlet.http.HttpSession;
 
 @Component
-public class SessionManager extends AbstractController {
+public class SessionService extends AbstractController {
 
     private static final String LOGGED_USER_ID = "LOGGED_USER_ID";
 

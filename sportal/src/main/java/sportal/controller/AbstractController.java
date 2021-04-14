@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import sportal.SportalApplication;
-import sportal.exceptions.AuthenticationException;
-import sportal.exceptions.BadRequestException;
-import sportal.exceptions.NotFoundException;
-import sportal.exceptions.WrongCredentialsException;
+import sportal.exceptions.*;
 import sportal.model.dto.ErrorDTO;
 
 import java.sql.SQLException;
@@ -49,6 +46,13 @@ public class AbstractController {
     @ExceptionHandler(WrongCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDTO handleWrongCredentials(WrongCredentialsException e){
+        log(e);
+        return new ErrorDTO(new Date(),HttpStatus.BAD_REQUEST.toString(),e.getMessage());
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ErrorDTO handleNullPointer(NullPointerException e){
         log(e);
         return new ErrorDTO(new Date(),HttpStatus.BAD_REQUEST.toString(),e.getMessage());
     }

@@ -9,7 +9,7 @@ import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
 import sportal.service.CommentService;
-import sportal.util.SessionManager;
+import sportal.service.SessionService;
 
 import javax.servlet.http.HttpSession;
 
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 public class CommentController extends AbstractController{
 
     @Autowired
-    SessionManager sessionManager;
+    SessionService sessionManager;
     @Autowired
     ArticleService articleService;
     @Autowired

@@ -12,7 +12,7 @@ import sportal.model.pojo.ArticleImage;
 import sportal.model.pojo.User;
 import sportal.model.repository.IImageRepository;
 import sportal.service.ImageService;
-import sportal.util.SessionManager;
+import sportal.service.SessionService;
 import sportal.util.OptionalResultVerifier;
 
 import javax.servlet.http.HttpSession;
@@ -27,7 +27,7 @@ public class ImageController extends AbstractController{
     @Autowired
     private IImageRepository imageRepository;
     @Autowired
-    private SessionManager sessionManager;
+    private SessionService sessionManager;
     @Autowired
     private UserController userController;
     @Autowired

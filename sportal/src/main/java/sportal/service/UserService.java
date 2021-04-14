@@ -40,10 +40,9 @@ public class UserService {
     private OptionalResultVerifier orv;
     @Autowired
     EntityManager entityManager;
-
-
+    
     public UserRegisterResponseDTO registerUser(UserRegisterRequestDTO userDTO){
-        Validator.emailFormatValidator(userDTO.getEmail());
+        Validator.validateEmail(userDTO.getEmail());
         if(userRepository.findByEmail(userDTO.getEmail()) != null){
             throw new BadRequestException("Email already exists");
         }
@@ -51,7 +50,8 @@ public class UserService {
         if(userRepository.findByUsername(userDTO.getUsername()).isPresent()){
             throw new BadRequestException("Username already exists");
         }
-        Validator.passwordFormatValidator(userDTO.getPassword());
+        Validator.validatePassword(userDTO.getPassword());
+        Validator.validatePassword(userDTO.getConfirmPassword());
         if (userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             PasswordEncoder encoder = new BCryptPasswordEncoder();
             userDTO.setPassword(encoder.encode(userDTO.getPassword()));
@@ -97,6 +97,8 @@ public class UserService {
     }
 
     public UserLoginResponseDTO loginUser(UserLoginRequestDTO dto) {
+        Validator.validateUsername(dto.getUsername());
+        Validator.validatePassword(dto.getPassword());
         Optional<User> optionalUser = userRepository.findByUsername(dto.getUsername());
         if(optionalUser.isEmpty()){
             throw new AuthenticationException("Wrong credentials");
@@ -129,7 +131,7 @@ public class UserService {
                 }
 //                check if email format is correct or if such email exists
                 if(userDTO.getEmail() != null) {
-                    Validator.emailFormatValidator(userDTO.getEmail());
+                    Validator.validateEmail(userDTO.getEmail());
                     userUpdate.setEmail(userDTO.getEmail());
                 }
                 //check if username format is correct

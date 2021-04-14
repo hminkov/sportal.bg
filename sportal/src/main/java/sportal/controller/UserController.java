@@ -1,11 +1,8 @@
 package sportal.controller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
-import sportal.SportalApplication;
 import sportal.exceptions.BadRequestException;
 import sportal.model.dto.UserLoginRequestDTO;
 import sportal.model.dto.UserLoginResponseDTO;
@@ -16,10 +13,9 @@ import sportal.exceptions.AuthenticationException;
 import sportal.exceptions.DBException;
 import sportal.model.dto.*;
 import sportal.service.UserService;
-import sportal.util.SessionManager;
+import sportal.service.SessionService;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -30,7 +26,7 @@ public class UserController extends AbstractController{
     @Autowired
     private UserService userService;
     @Autowired
-    private SessionManager sessionManager;
+    private SessionService sessionManager;
 
     @PostMapping("/users")
     public UserRegisterResponseDTO register(@RequestBody UserRegisterRequestDTO userDTO, HttpSession ses){

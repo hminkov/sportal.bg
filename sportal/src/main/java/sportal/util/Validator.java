@@ -1,16 +1,19 @@
 package sportal.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import sportal.controller.UserController;
 import sportal.exceptions.BadRequestException;
-import sportal.model.pojo.User;
 
 public class Validator {
 
     private static final String EMAIL_REGEX = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     private static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$";
 
-    public static void emailFormatValidator(String email){
+    public static void validateEmail(String email){
+        if(email == null){
+            throw new NullPointerException("Email cannot be empty");
+        }
+        if(email.isEmpty()){
+            throw new BadRequestException("Email cannot be empty");
+        }
         if (!email.matches(EMAIL_REGEX)) {
             throw new BadRequestException("Email is not valid");
         }
@@ -24,11 +27,24 @@ public class Validator {
         }
     }
 
+    public static void validatePassword(String password) {
+        if(password == null){
+            throw new NullPointerException("Password cannot be empty");
+        }
+        if(password.isEmpty()){
+            throw new BadRequestException("Password cannot be empty");
+        }
+        passwordFormatValidator(password);
+    }
+
     public static void validateUsername(String username){
-        username = username.trim();
+        if(username == null){
+            throw new NullPointerException("Username cannot be empty");
+        }
         if(username.isEmpty()){
             throw new BadRequestException("Username cannot be empty");
         }
+        username = username.trim();
         if(username.length() < 3){
             throw new BadRequestException("Username too short");
         }

@@ -7,7 +7,7 @@ import sportal.exceptions.AuthenticationException;
 import sportal.model.dto.*;
 import sportal.model.pojo.User;
 import sportal.service.ArticleService;
-import sportal.util.SessionManager;
+import sportal.service.SessionService;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -19,7 +19,7 @@ public class ArticleController extends AbstractController{
     @Autowired
     ArticleService articleService;
     @Autowired
-    SessionManager sessionManager;
+    SessionService sessionManager;
     @Autowired
     private UserController userController;
 
